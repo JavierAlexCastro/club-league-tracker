@@ -17,6 +17,8 @@ build/
 .idea/
 docs/_build/
 .vscode
+__pycache__/
+instance/
 
 # Coverage reports
 htmlcov/

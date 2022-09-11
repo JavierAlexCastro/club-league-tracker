@@ -1,1 +1,13 @@
-#TODO
+Flask==2.0.3
+Flask-Compress==1.5.0
+gunicorn==20.1.0
+pandas==1.4.2
+psycopg2==2.9.3
+python-dateutil==2.8.2
+python-decouple==3.6
+PyYAML==6.0
+requests==2.27.1
+setuptools==61.2.0
+six==1.16.0
+SQLAlchemy==1.4.32
+tenacity==8.0.1
