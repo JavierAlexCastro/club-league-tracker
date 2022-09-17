@@ -1,0 +1,26 @@
+<html>
+    <title>Club League Tracker</title>
+    <h1>Club Members</h1>
+    <body>
+        <table cellspacing="3" cellpadding="5" bgcolor="#000000">
+            <thead>
+                <tr bgcolor="#ffffff">
+                    <th>Tag</th>
+                    <th>Name</th>
+                    <th>Role</th>
+                    <th>Trophies</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for member in member_list %}
+                <tr bgcolor="#ffffff">
+                    <td>{{ member.tag }}</td>
+                    <td>{{ member.name }}</td>
+                    <td>{{ member.role }}</td>
+                    <td>{{ member.trophies }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </body>
+ </html>
