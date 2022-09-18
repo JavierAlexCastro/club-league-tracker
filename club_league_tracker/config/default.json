@@ -1,8 +1,9 @@
 {
     "DEBUG": true,
     "PROPAGATE_EXCEPTIONS": true,
-    "SECRET_KEY": "e1d8e7c704e8e8d9ef64c995ca44531f7bbd6aec8e44228de16f1a22ceb11f9f",
-    "SQLALCHEMY_DATABASE_URI": "postgresql://dzgqeljobgoioi:0baa1c31efb2de35c4534babdb78cad20092dcb299f2e7c5854a937695eec703@ec2-3-229-165-146.compute-1.amazonaws.com/d31tvn0ahqa3pf",
+    "SECRET_KEY": "${FLASK_SECRET_KEY}",
+    "BS_API_KEY": "${BS_API_KEY}",
+    "SQLALCHEMY_DATABASE_URI": "postgresql://${DB_USER}:${DB_PASSWORD}@${DB_HOST}/d31tvn0ahqa3pf",
     "SQLALCHEMY_ECHO": true,
     "SQLALCHEMY_TRACK_MODIFICATIONS": false
 }

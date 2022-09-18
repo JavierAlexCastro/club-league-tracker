@@ -2,6 +2,7 @@
     "DEBUG": true,
     "PROPAGATE_EXCEPTIONS": true,
     "SECRET_KEY": "${FLASK_SECRET_KEY}",
+    "BS_API_KEY":"${BS_API_KEY}",
     "SQLALCHEMY_DATABASE_URI": "postgresql://${DB_USER}:${DB_PASSWORD}@${DB_HOST}/d31tvn0ahqa3pf",
     "SQLALCHEMY_ECHO": true
 }
