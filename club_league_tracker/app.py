@@ -1,9 +1,11 @@
 import os
 import json
 
-from flask import Flask, render_template
+from flask import Flask, render_template, request, url_for, redirect
 from club_league_tracker.db import db
+from club_league_tracker.service import db_service
 from club_league_tracker.models.db import *
+from club_league_tracker.networking.bs_clubs import get_club_members, get_api_club_members
 
 # TODO: catch error check config
 def load_app_config(app, env: str):
@@ -45,15 +47,39 @@ db.create_all()
 
 # a simple page that says hello
 @app.route('/')
-def hello():
-    return 'Hello, World!'
+def site_home():
+    return render_template('index.html')
 
-@app.route('/club-members')
-def get_club_members():
+@app.route('/about')
+def site_about():
+    return render_template('about.html')
 
+@app.route('/club-members', methods=['GET', 'POST'])
+def site_club_members_search():
+    if request.method == 'POST':
+        # TODO: validate <club_tag>
+        club_tag = request.form.get('club_tag')
+        do_refresh = request.form.get('do_refresh')
+        return redirect(url_for('site_club_members', input_club_tag=str(club_tag), refresh=do_refresh))
+
+    return render_template('members_search.html')
+
+@app.route('/club-members/<input_club_tag>')
+def site_club_members(input_club_tag: str):
+    club_tag = input_club_tag.replace('#', '')
+    bs_api_key = app.config['BS_API_KEY']
     members = []
     try:
-        members = club_member.query.all()
+        if 'refresh' in request.args and request.args['refresh'] == 'true':
+            # TODO: proper logging
+            print("Getting members from API")
+            members = get_club_members(club_tag=f'#{club_tag}',
+                                        auth_token=f'Bearer {bs_api_key}')
+            db_service.save_club_members(members)
+        else:
+            # TODO: proper logging
+            print("Getting members from DB")
+            members = club_member.query.all()
         print(f"Retrieved {str(len(members))} club_members: ")
     except:
         # TODO: proper logging and exception handling
