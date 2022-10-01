@@ -13,7 +13,7 @@ def load_app_config(flask_app, flask_env: str):
         flask_app.config.from_file(r"config\default.json", load=json.load)
     else:
         config_file: str = f"{flask_env.lower()}.json"
-        if os.path.exists():
+        if os.path.exists(config_file):
             flask_app.config.from_file(config_file, load=json.load)
         else:
             # TODO: proper logging (WARN)
@@ -60,7 +60,8 @@ def site_club_members_search():
         # TODO: validate <club_tag>
         club_tag = request.form.get('club_tag')
         do_refresh = request.form.get('do_refresh')
-        return redirect(url_for('site_club_members', input_club_tag=str(club_tag), refresh=do_refresh))
+        return redirect(
+            url_for('site_club_members', input_club_tag=str(club_tag), refresh=do_refresh))
 
     return render_template('members_search.html')
 
