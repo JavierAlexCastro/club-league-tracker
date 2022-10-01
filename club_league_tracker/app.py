@@ -8,34 +8,34 @@ from club_league_tracker.models.db import *
 from club_league_tracker.networking.bs_clubs import get_club_members, get_api_club_members
 
 # TODO: catch error check config
-def load_app_config(app, env: str):
-    if env is None:
-        app.config.from_file("config\default.json", load=json.load)
+def load_app_config(flask_app, flask_env: str):
+    if flask_env is None:
+        flask_app.config.from_file(r"config\default.json", load=json.load)
     else:
-        config_file: str = f"{env.lower()}.json"
+        config_file: str = f"{flask_env.lower()}.json"
         if os.path.exists():
-            app.config.from_file(config_file, load=json.load)
+            flask_app.config.from_file(config_file, load=json.load)
         else:
             # TODO: proper logging (WARN)
             print(f"{config_file} file not found. Loading 'default' config")
-            app.config.from_file("config\default.json", load=json.load)
+            flask_app.config.from_file(r"config\default.json", load=json.load)
 
-def load_db_config(app):
-    app.config['SQLALCHEMY_ENGINE_OPTIONS'] = {"pool_pre_ping": True}
+def load_db_config(flask_app):
+    flask_app.config['SQLALCHEMY_ENGINE_OPTIONS'] = {"pool_pre_ping": True}
 
-def create_app(env: str = None):
+def create_app(flask_env: str = None):
     # app = Flask(__name__, instance_relative_config=True)
-    app = Flask(__name__)
+    flask_app = Flask(__name__)
 
-    load_app_config(app, env)
-    load_db_config(app)
+    load_app_config(flask_app, flask_env)
+    load_db_config(flask_app)
 
     # TODO: add sensitive data dynamically
     # app.config.from_mapping(
     #     SECRET_KEY='dev',
     # )
 
-    return app
+    return flask_app
 
 
 env = os.environ.get('ENV')
@@ -81,8 +81,9 @@ def site_club_members(input_club_tag: str):
             print("Getting members from DB")
             members = club_member.query.all()
         print(f"Retrieved {str(len(members))} club_members: ")
-    except:
+    except Exception as ex:
         # TODO: proper logging and exception handling
-        raise
+        error_msg = f"Error getting club members - {str(ex)}"
+        raise RuntimeError(error_msg)
 
     return render_template('members.html', member_list = members)
