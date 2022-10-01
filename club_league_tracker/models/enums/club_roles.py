@@ -1,7 +1,7 @@
 from enum import Enum, unique
 
 @unique
-class CLUB_ROLES(Enum):
+class ClubRoles(Enum):
     MEMBER = "member"
     SENIOR = "senior"
     VICE_PRESIDENT = "vicePresident"
@@ -10,16 +10,17 @@ class CLUB_ROLES(Enum):
     NOT_MEMBER = "notMember"
 
     def describe(self):
-         # self is the member here
-         return self.name, self.value
+        # self is the member here
+        return self.name, self.value
 
     def __str__(self):
         return f"{self.value}"
 
     @classmethod
-    def is_leadership(role: Enum) -> bool:
-        return role in [CLUB_ROLES.VICE_PRESIDENT, CLUB_ROLES.PRESIDENT]
-    
+    def is_leadership(cls, role: Enum) -> bool:
+        return role in [ClubRoles.VICE_PRESIDENT, ClubRoles.PRESIDENT]
+
     @classmethod
-    def is_member(role: Enum) -> bool:
-        return role in [CLUB_ROLES.MEMBER, CLUB_ROLES.SENIOR, CLUB_ROLES.VICE_PRESIDENT, CLUB_ROLES.PRESIDENT]
+    def is_member(cls, role: Enum) -> bool:
+        return role in [ClubRoles.MEMBER, ClubRoles.SENIOR, ClubRoles.VICE_PRESIDENT,
+                        ClubRoles.PRESIDENT]

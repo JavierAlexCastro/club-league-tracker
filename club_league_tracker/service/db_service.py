@@ -1,9 +1,9 @@
 import typing
 
 from club_league_tracker.db import db
-from club_league_tracker.models.db import *
+from club_league_tracker.models.db import ClubMember
 
-def save_club_members(club_members: typing.List[club_member]):
+def save_club_members(club_members: typing.List[ClubMember]):
     try:
         for member in club_members:
             db.session.add(member)
@@ -11,5 +11,4 @@ def save_club_members(club_members: typing.List[club_member]):
         # TODO: proper logging
         print(f"Successfully commited {len(club_members)} records to DB")
     except Exception as ex:
-        error_msg = "Failed to commit club_members to DB"
-        raise RuntimeError(f"{error_msg} - {str(ex)}")
+        raise RuntimeError("Failed to commit club_members to DB") from ex

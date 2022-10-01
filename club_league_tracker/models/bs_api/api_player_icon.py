@@ -1,3 +1,5 @@
-class api_player_icon:
-    def __init__(self, id: int):
-        self.id = id
+from dataclasses import dataclass
+
+@dataclass
+class ApiPlayerIcon:
+    icon_id: int

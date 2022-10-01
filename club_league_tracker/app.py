@@ -4,8 +4,8 @@ import json
 from flask import Flask, render_template, request, url_for, redirect
 from club_league_tracker.db import db
 from club_league_tracker.service import db_service
-from club_league_tracker.models.db import *
-from club_league_tracker.networking.bs_clubs import get_club_members, get_api_club_members
+from club_league_tracker.models.db import ClubMember
+from club_league_tracker.networking.bs_clubs import get_club_members
 
 # TODO: catch error check config
 def load_app_config(flask_app, flask_env: str):
@@ -80,11 +80,10 @@ def site_club_members(input_club_tag: str):
         else:
             # TODO: proper logging
             print("Getting members from DB")
-            members = club_member.query.all()
+            members = ClubMember.query.all()
         print(f"Retrieved {str(len(members))} club_members: ")
     except Exception as ex:
         # TODO: proper logging and exception handling
-        error_msg = f"Error getting club members - {str(ex)}"
-        raise RuntimeError(error_msg)
+        raise RuntimeError("Error getting club members") from ex
 
     return render_template('members.html', member_list = members)
