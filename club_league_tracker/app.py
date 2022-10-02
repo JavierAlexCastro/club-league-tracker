@@ -20,7 +20,7 @@ def load_app_config(flask_app, flask_env: str):
                 # TODO: proper logging
                 print(f"Loading {flask_env} config")
                 flask_app.config['SECRET_KEY'] = os.environ['SECRET_KEY']
-                flask_app.config['SQLALCHEMY_DATABASE_URI'] = os.environ['DATABASE_URL']
+                flask_app.config['SQLALCHEMY_DATABASE_URI'] = os.environ['SQLALCHEMY_DATABASE_URI']
                 flask_app.config['BS_API_KEY'] = os.environ['BS_API_KEY']
         else:
             # TODO: proper logging (WARN)
