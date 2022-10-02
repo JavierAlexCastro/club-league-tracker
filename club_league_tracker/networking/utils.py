@@ -64,6 +64,6 @@ def do_retryable_request(request_type: RequestType,
         print(f"Request response: {query_response}")
 
     if not query_response:
-        raise RuntimeError(f"Max retries exceeded sending {request_type} to {request_contents.url}")
+        raise RuntimeError(f"Max retries exceeded sending {request_type} to {request_contents.url}. Got {query_response.text}")
 
     return query_response
