@@ -13,7 +13,7 @@ def load_app_config(flask_app, flask_env: str):
         flask_app.config.from_file(r"config\default.json", load=json.load)
     else:
         config_file: str = f"config/{flask_env.lower()}.json"
-        if os.path.exists(config_file):
+        if os.path.exists(os.path.join(os.getcwd(), f"club_league_tracker/{config_file}")):
             flask_app.config.from_file(config_file, load=json.load)
 
             if flask_env is "production":
