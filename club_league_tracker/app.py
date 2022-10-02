@@ -12,7 +12,8 @@ def load_app_config(flask_app, flask_env: str):
     if flask_env is None:
         flask_app.config.from_file(r"config\default.json", load=json.load)
     else:
-        config_file: str = f"{flask_env.lower()}.json"
+        config_file: str = f"config\{flask_env.lower()}.json"
+        print(f"Looking for config file {config_file}")
         if os.path.exists(config_file):
             flask_app.config.from_file(config_file, load=json.load)
 
