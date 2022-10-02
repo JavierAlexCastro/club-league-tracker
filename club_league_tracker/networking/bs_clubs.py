@@ -20,7 +20,7 @@ from club_league_tracker.networking.utils import do_retryable_request
 #         self.name_color = name_color
 
 # uses db model
-def get_club_members(club_tag:str, auth_token: str) -> typing.List[ClubMember]:
+def get_club_members(club_tag:str, auth_token: str, proxies: dict) -> typing.List[ClubMember]:
     encoded_club_tag = urllib.parse.quote(club_tag.encode('utf8'))
     request_retry_opts = RetryOptions(max_retries = 3, retry_buffer_seconds = 5)
     request_contents = RequestContents(
@@ -28,7 +28,8 @@ def get_club_members(club_tag:str, auth_token: str) -> typing.List[ClubMember]:
         headers = {
             "Authorization": f"Bearer {auth_token}"
         },
-        timeout_seconds = 3
+        timeout_seconds = 3,
+        proxy = proxies
     )
 
     res_tag = Defaults.STRING

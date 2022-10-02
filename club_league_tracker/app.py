@@ -7,11 +7,25 @@ from club_league_tracker.service import db_service
 from club_league_tracker.models.db import ClubMember
 from club_league_tracker.networking.bs_clubs import get_club_members
 
+def get_fixie_proxy():
+    fixie_proxy = None
+    proxy_from_config = app.config['FIXIE_URL']
+    if proxy_from_config != "":
+        # TODO: proper logging
+        print("Using Fixie Proxy!")
+        fixie_proxy = {
+            "http"  : proxy_from_config,
+            "https" : proxy_from_config
+        }
+
+    return fixie_proxy
+
 # TODO: catch error check config
 def load_app_config(flask_app, flask_env: str):
     if flask_env is None:
         flask_app.config.from_file(r"config\default.json", load=json.load)
     else:
+        # TODO: assumes running in linux '/'. Windows uses '\'. Should not assume.
         config_file: str = f"config/{flask_env.lower()}.json"
         if os.path.exists(os.path.join(os.getcwd(), f"club_league_tracker/{config_file}")):
             flask_app.config.from_file(config_file, load=json.load)
@@ -22,6 +36,7 @@ def load_app_config(flask_app, flask_env: str):
                 flask_app.config['SECRET_KEY'] = os.environ['SECRET_KEY']
                 flask_app.config['SQLALCHEMY_DATABASE_URI'] = os.environ['SQLALCHEMY_DATABASE_URI']
                 flask_app.config['BS_API_KEY'] = os.environ['BS_API_KEY']
+                flask_app.config['FIXIE_URL'] = os.environ['FIXIE_URL']
         else:
             # TODO: proper logging (WARN)
             print(f"{config_file} file not found. Loading 'default' config")
@@ -51,6 +66,8 @@ app = create_app(env)
 db.init_app(app)
 app.app_context().push()
 db.create_all()
+
+fixie_proxy = get_fixie_proxy()
 
 # a simple page that says hello
 @app.route('/')
@@ -82,7 +99,8 @@ def site_club_members(input_club_tag: str):
             # TODO: proper logging
             print("Getting members from API")
             members = get_club_members(club_tag=f'#{club_tag}',
-                                        auth_token=f'Bearer {bs_api_key}')
+                                        auth_token=f'Bearer {bs_api_key}',
+                                        proxies=fixie_proxy)
             db_service.save_club_members(members)
         else:
             # TODO: proper logging
