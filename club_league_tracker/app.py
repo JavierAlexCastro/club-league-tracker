@@ -99,7 +99,7 @@ def site_club_members(input_club_tag: str):
             # TODO: proper logging
             print("Getting members from API")
             members = get_club_members(club_tag=f'#{club_tag}',
-                                        auth_token=f'Bearer {bs_api_key}',
+                                        auth_token=bs_api_key,
                                         proxies=fixie_proxy)
             db_service.save_club_members(members)
         else:
