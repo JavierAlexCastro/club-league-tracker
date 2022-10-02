@@ -22,7 +22,7 @@ from club_league_tracker.networking.utils import do_retryable_request
 # uses db model
 def get_club_members(club_tag:str, auth_token: str, proxies: dict) -> typing.List[ClubMember]:
     encoded_club_tag = urllib.parse.quote(club_tag.encode('utf8'))
-    request_retry_opts = RetryOptions(max_retries = 3, retry_buffer_seconds = 5)
+    request_retry_opts = RetryOptions(max_retries = 2, retry_buffer_seconds = 5)
     request_contents = RequestContents(
         url = f"https://api.brawlstars.com/v1/clubs/{encoded_club_tag}/members",
         headers = {
@@ -64,7 +64,7 @@ def get_club_members(club_tag:str, auth_token: str, proxies: dict) -> typing.Lis
 # uses networking model
 def get_api_club_members(club_tag: str, auth_token: str) -> typing.List[ApiClubMember]:
     encoded_club_tag = urllib.parse.quote(club_tag.encode('utf8'))
-    request_retry_opts = RetryOptions(max_retries = 3, retry_buffer_seconds = 5)
+    request_retry_opts = RetryOptions(max_retries = 2, retry_buffer_seconds = 5)
     request_contents = RequestContents(
         url = f"https://api.brawlstars.com/v1/clubs/{encoded_club_tag}/members",
         headers = {
