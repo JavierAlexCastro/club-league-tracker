@@ -1,0 +1,17 @@
+CREATE ROLE "cl-tracker" WITH
+	LOGIN
+	NOSUPERUSER
+	NOCREATEDB
+	NOCREATEROLE
+	INHERIT
+	NOREPLICATION
+	CONNECTION LIMIT -1
+	PASSWORD 'password';
+
+CREATE DATABASE "dev-cl-tracker-db"
+    WITH
+    OWNER = "cl-tracker"
+    ENCODING = 'UTF8'
+    TABLESPACE = pg_default
+    CONNECTION LIMIT = -1
+    IS_TEMPLATE = False;

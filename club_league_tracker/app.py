@@ -11,9 +11,6 @@ from club_league_tracker.networking.bs_clubs import get_club_members
 def load_app_config(flask_app, flask_env: str):
     if flask_env is None:
         flask_app.config.from_file(r"config\default.json", load=json.load)
-        flask_app.config['SQLALCHEMY_DATABASE_URI'] = os.environ['DATABASE_URL']
-        flask_app.config['SQLALCHEMY_DATABASE_URI'] = os.environ['DATABASE_URL']
-        flask_app.config['SQLALCHEMY_DATABASE_URI'] = os.environ['DATABASE_URL']
     else:
         config_file: str = f"{flask_env.lower()}.json"
         if os.path.exists(config_file):
