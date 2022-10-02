@@ -1,4 +1,4 @@
-from club_league_tracker import app
+from club_league_tracker.app import app
  
 if __name__ == "__main__":
         app.run()
