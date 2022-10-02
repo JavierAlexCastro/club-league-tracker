@@ -6,6 +6,7 @@
             <thead>
                 <tr bgcolor="#ffffff">
                     <th>Tag</th>
+                    <th>ClubTag</th>
                     <th>Name</th>
                     <th>Role</th>
                     <th>Trophies</th>
@@ -15,6 +16,7 @@
                 {% for member in member_list %}
                 <tr bgcolor="#ffffff">
                     <td>{{ member.tag }}</td>
+                    <td>{{ member.club_tag }}</td>
                     <td>{{ member.name }}</td>
                     <td>{{ member.role }}</td>
                     <td>{{ member.trophies }}</td>

@@ -19,7 +19,7 @@ class ClubLeagueSeason(db.Model):
     participation = db.Column('season_participation', db.Integer, nullable=True,
                                 default=Defaults.INTEGER)
     is_current = db.Column('season_is_current', db.Boolean, nullable=False)
-    club_league_games = db.relationship('club_league_games',
+    club_league_games = db.relationship('ClubLeagueGames',
                                         backref='club_league_season', lazy=True)
 
     def __repr__(self):

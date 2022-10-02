@@ -87,7 +87,10 @@ def site_club_members(input_club_tag: str):
         else:
             # TODO: proper logging
             print("Getting members from DB")
-            members = ClubMember.query.all()
+            members = ClubMember.query \
+                .filter(ClubMember.club_tag.endswith(club_tag)) \
+                .order_by(ClubMember.trophies.desc()) \
+                .all()
         print(f"Retrieved {str(len(members))} club_members: ")
     except Exception as ex:
         # TODO: proper logging and exception handling

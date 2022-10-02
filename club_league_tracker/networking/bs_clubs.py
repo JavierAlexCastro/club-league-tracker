@@ -52,8 +52,8 @@ def get_club_members(club_tag:str, auth_token: str) -> typing.List[ClubMember]:
                 res_trophies = member['trophies']
 
             club_members.append(
-                ClubMember(tag = res_tag, name = res_name, role = res_role,
-                            trophies = res_trophies))
+                ClubMember(tag = res_tag, club_tag = club_tag, name = res_name,
+                            role = res_role, trophies = res_trophies))
     except Exception as ex:
         # TODO: proper logging
         raise RuntimeError(f"Error getting club members for club {club_tag}") from ex
