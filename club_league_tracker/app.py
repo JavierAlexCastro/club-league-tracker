@@ -16,7 +16,9 @@ def load_app_config(flask_app, flask_env: str):
         if os.path.exists(os.path.join(os.getcwd(), f"club_league_tracker/{config_file}")):
             flask_app.config.from_file(config_file, load=json.load)
 
-            if flask_env is "production":
+            if flask_env == "production":
+                # TODO: proper logging
+                print(f"Loading {flask_env} config")
                 flask_app.config['SECRET_KEY'] = os.environ['SECRET_KEY']
                 flask_app.config['SQLALCHEMY_DATABASE_URI'] = os.environ['DATABASE_URL']
                 flask_app.config['BS_API_KEY'] = os.environ['BS_API_KEY']
