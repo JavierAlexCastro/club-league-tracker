@@ -9,16 +9,6 @@ from club_league_tracker.models.enums.club_roles import ClubRoles
 from club_league_tracker.networking.utils import RequestContents, RetryOptions, RequestType
 from club_league_tracker.networking.utils import do_retryable_request
 
-# @dataclass
-# class APIClubMember:
-#     def __init__(self, icon, tag, name, trophies, role, name_color):
-#         self.icon = icon
-#         self.tag = tag
-#         self.name = name
-#         self.trophies = trophies
-#         self.role = role
-#         self.name_color = name_color
-
 # uses db model
 def get_club_members(club_tag:str, auth_token: str, proxies: dict) -> typing.List[ClubMember]:
     encoded_club_tag = urllib.parse.quote(club_tag.encode('utf8'))

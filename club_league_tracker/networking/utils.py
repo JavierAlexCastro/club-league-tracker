@@ -1,6 +1,4 @@
 import time
-import logging
-import sys
 
 from dataclasses import dataclass
 from enum import Enum
@@ -30,7 +28,6 @@ def do_retryable_request(request_type: RequestType,
                         request_contents: RequestContents,
                         retry_options: RetryOptions):
     query_response = None
-    logging.basicConfig(stream=sys.stdout, level=logging.DEBUG)
     for i in range(retry_options.max_retries):
         if query_response:
             break
@@ -64,8 +61,6 @@ def do_retryable_request(request_type: RequestType,
                                                 headers=request_contents.headers,
                                                 timeout=request_contents.timeout_seconds,
                                                 proxies=request_contents.proxy)
-        print(f"Request headers: {query_response.request.headers}")
-        print(f"Request body: {query_response.request.body}")
         print(f"Request response: {query_response}")
 
     if not query_response:
