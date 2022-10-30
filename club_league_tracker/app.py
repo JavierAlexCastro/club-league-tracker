@@ -23,7 +23,7 @@ def get_fixie_proxy():
 # TODO: catch error check config
 def load_app_config(flask_app, flask_env: str):
     if flask_env is None:
-        flask_app.config.from_file(r"config\default.json", load=json.load)
+        flask_app.config.from_file(r"config/default.json", load=json.load)
     else:
         # TODO: assumes running in linux '/'. Windows uses '\'. Should not assume.
         config_file: str = f"config/{flask_env.lower()}.json"
