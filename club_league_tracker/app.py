@@ -43,7 +43,13 @@ def load_app_config(flask_app, flask_env: str):
             flask_app.config.from_file(r"config\default.json", load=json.load)
 
 def load_db_config(flask_app):
-    flask_app.config['SQLALCHEMY_ENGINE_OPTIONS'] = {"pool_pre_ping": True}
+    flask_app.config['SQLALCHEMY_ENGINE_OPTIONS'] = {
+        "pool_pre_ping": True,
+        "pool_size": 10,
+        "max_overflow": 2,
+        "pool_recycle": 300,
+        "pool_use_lifo": True
+    }
 
 def create_app(flask_env: str = None):
     # app = Flask(__name__, instance_relative_config=True)
