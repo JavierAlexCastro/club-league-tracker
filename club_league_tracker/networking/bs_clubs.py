@@ -51,6 +51,7 @@ def get_club_members(club_tag:str, auth_token: str, proxies: dict) -> typing.Lis
 
     return club_members
 
+# TODO: remove
 # uses networking model
 def get_api_club_members(club_tag: str, auth_token: str) -> typing.List[ApiClubMember]:
     encoded_club_tag = urllib.parse.quote(club_tag.encode('utf8'))
