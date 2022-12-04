@@ -1,5 +1,9 @@
 name: build and lint
 
+on:
+  push:
+    branches: ["main"]
+
 jobs:
   python-lint:
     runs-on: ubuntu-latest
