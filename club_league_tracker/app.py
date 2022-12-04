@@ -2,7 +2,7 @@ import os
 import json
 
 from flask import Flask, render_template, request, url_for, redirect
-from club_league_tracker.db import db_session
+from club_league_tracker.db import db_session, create_db
 from club_league_tracker.service import db_service
 from club_league_tracker.models.db import ClubMember
 from club_league_tracker.networking.bs_clubs import get_club_members
@@ -68,6 +68,7 @@ def create_app(flask_env: str = None):
 
 env = os.environ.get('ENV')
 app = create_app(env)
+# create_db()
 app.app_context().push()
 
 fixie_proxy = get_fixie_proxy()

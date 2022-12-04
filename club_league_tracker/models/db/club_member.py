@@ -4,6 +4,7 @@ from club_league_tracker.db import Base
 from club_league_tracker.models.enums.defaults import Defaults
 
 class ClubMember(Base):
+    __tablename__ = 'club_member'
     tag = Column('member_tag', String(16), primary_key=True)
     club_tag = Column('club_tag', String(16), nullable=False, default=Defaults.STRING)
     name = Column('member_name', String(32), nullable=False, default=Defaults.STRING)

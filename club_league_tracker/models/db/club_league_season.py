@@ -4,6 +4,7 @@ from club_league_tracker.db import Base
 from club_league_tracker.models.enums.defaults import Defaults
 
 class ClubLeagueSeason(Base):
+    __tablename__ = 'club_league_season'
     id = Column('season_id', Integer, nullable=False, primary_key=True)
     week = Column('season_week', String(16), nullable=False, default='unknown')
     start_members = Column('season_start_members', Integer, nullable=True,

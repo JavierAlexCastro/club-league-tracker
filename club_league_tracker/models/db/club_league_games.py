@@ -3,6 +3,7 @@ from club_league_tracker.db import Base
 from club_league_tracker.models.enums.defaults import Defaults
 
 class ClubLeagueGames(Base):
+    __tablename__ = 'club_league_games'
     game_id = Column('game_id', Integer,nullable=False, primary_key=True)
     season_id = Column(Integer, ForeignKey('club_league_season.season_id'), nullable=False)
     game_day = Column('game_day', String(16), nullable=False, default=Defaults.STRING)
