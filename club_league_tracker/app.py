@@ -2,7 +2,7 @@ import os
 import json
 
 from flask import Flask, render_template, request, url_for, redirect
-from club_league_tracker.db import db
+from club_league_tracker.db import db_session
 from club_league_tracker.service import db_service
 from club_league_tracker.models.db import ClubMember
 from club_league_tracker.networking.bs_clubs import get_club_members
@@ -68,10 +68,7 @@ def create_app(flask_env: str = None):
 
 env = os.environ.get('ENV')
 app = create_app(env)
-
-db.init_app(app)
 app.app_context().push()
-db.create_all()
 
 fixie_proxy = get_fixie_proxy()
 
@@ -118,3 +115,7 @@ def site_club_members(input_club_tag: str):
         raise RuntimeError("Error getting club members") from ex
 
     return render_template('members.html', member_list = members)
+
+@app.teardown_appcontext
+def shutdown_session(exception=None):
+    db_session.remove()

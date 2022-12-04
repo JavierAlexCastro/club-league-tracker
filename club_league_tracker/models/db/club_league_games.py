@@ -1,18 +1,19 @@
-from club_league_tracker.db import db
+from sqlalchemy import Column, Integer, String, ForeignKey
+from club_league_tracker.db import Base
 from club_league_tracker.models.enums.defaults import Defaults
 
-class ClubLeagueGames(db.Model):
-    game_id = db.Column('game_id', db.Integer,nullable=False, primary_key=True)
-    season_id = db.Column(db.Integer, db.ForeignKey('club_league_season.season_id'), nullable=False)
-    game_day = db.Column('game_day', db.String(16), nullable=False, default=Defaults.STRING)
-    game_mode = db.Column('game_mode', db.String(64), nullable=False, default=Defaults.STRING)
-    game_map = db.Column('game_map', db.String(64), nullable=False, default=Defaults.STRING)
-    game_result = db.Column('game_result', db.String(16), nullable=False, default=Defaults.STRING)
-    game_trophies = db.Column('game_trophies', db.Integer, nullable=False, default=Defaults.INTEGER)
-    member_tag = db.Column(db.String(16), db.ForeignKey('club_member.member_tag'), nullable=False)
-    member_name = db.Column('game_member_name', db.String(32), nullable=False,
+class ClubLeagueGames(Base):
+    game_id = Column('game_id', Integer,nullable=False, primary_key=True)
+    season_id = Column(Integer, ForeignKey('club_league_season.season_id'), nullable=False)
+    game_day = Column('game_day', String(16), nullable=False, default=Defaults.STRING)
+    game_mode = Column('game_mode', String(64), nullable=False, default=Defaults.STRING)
+    game_map = Column('game_map', String(64), nullable=False, default=Defaults.STRING)
+    game_result = Column('game_result', String(16), nullable=False, default=Defaults.STRING)
+    game_trophies = Column('game_trophies', Integer, nullable=False, default=Defaults.INTEGER)
+    member_tag = Column(String(16), ForeignKey('club_member.member_tag'), nullable=False)
+    member_name = Column('game_member_name', String(32), nullable=False,
                             default=Defaults.STRING)
-    member_brawler = db.Column('game_member_brawler', db.String(32), nullable=True,
+    member_brawler = Column('game_member_brawler', String(32), nullable=True,
                             default=Defaults.STRING)
 
     def __repr__(self):

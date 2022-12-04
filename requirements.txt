@@ -1,6 +1,5 @@
 Flask==2.2.2
 Flask-Compress==1.12
-Flask-SQLAlchemy==2.5.1
 gunicorn==20.1.0
 pandas==1.4.2
 psycopg2-binary==2.9.3
@@ -11,7 +10,6 @@ PyYAML==6.0
 requests==2.27.1
 setuptools==61.2.0
 six==1.16.0
-# SQLAlchemy==1.4.32
 tenacity==8.0.1
 pylint-flask-sqlalchemy==0.2.0
 SQLAlchemy==1.4.44

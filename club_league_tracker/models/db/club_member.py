@@ -1,13 +1,15 @@
-from club_league_tracker.db import db
+from sqlalchemy import Column, Integer, String
+from sqlalchemy.orm import relationship
+from club_league_tracker.db import Base
 from club_league_tracker.models.enums.defaults import Defaults
 
-class ClubMember(db.Model):
-    tag = db.Column('member_tag', db.String(16), primary_key=True)
-    club_tag = db.Column('club_tag', db.String(16), nullable=False, default=Defaults.STRING)
-    name = db.Column('member_name', db.String(32), nullable=False, default=Defaults.STRING)
-    role = db.Column('member_role', db.String(32), nullable=False, default=Defaults.STRING)
-    trophies = db.Column('member_trophies', db.Integer, nullable=False, default=Defaults.INTEGER)
-    club_league_games = db.relationship('ClubLeagueGames', backref='club_member', lazy=True)
+class ClubMember(Base):
+    tag = Column('member_tag', String(16), primary_key=True)
+    club_tag = Column('club_tag', String(16), nullable=False, default=Defaults.STRING)
+    name = Column('member_name', String(32), nullable=False, default=Defaults.STRING)
+    role = Column('member_role', String(32), nullable=False, default=Defaults.STRING)
+    trophies = Column('member_trophies', Integer, nullable=False, default=Defaults.INTEGER)
+    club_league_games = relationship('ClubLeagueGames', backref='club_member', lazy=True)
 
     def __repr__(self):
         return f"Club Member:\n" \

@@ -1,25 +1,27 @@
-from club_league_tracker.db import db
+from sqlalchemy import Column, Integer, String, Boolean
+from sqlalchemy.orm import relationship
+from club_league_tracker.db import Base
 from club_league_tracker.models.enums.defaults import Defaults
 
-class ClubLeagueSeason(db.Model):
-    id = db.Column('season_id', db.Integer, nullable=False, primary_key=True)
-    week = db.Column('season_week', db.String(16), nullable=False, default='unknown')
-    start_members = db.Column('season_start_members', db.Integer, nullable=True,
+class ClubLeagueSeason(Base):
+    id = Column('season_id', Integer, nullable=False, primary_key=True)
+    week = Column('season_week', String(16), nullable=False, default='unknown')
+    start_members = Column('season_start_members', Integer, nullable=True,
                                 default=Defaults.INTEGER)
-    end_members = db.Column('season_end_members', db.Integer, nullable=True,
+    end_members = Column('season_end_members', Integer, nullable=True,
                                 default=Defaults.INTEGER)
-    day_one_trophies = db.Column('season_day_one_trophies', db.Integer, nullable=False,
+    day_one_trophies = Column('season_day_one_trophies', Integer, nullable=False,
                                 default=Defaults.INTEGER)
-    day_two_trophies = db.Column('season_day_two_trophies', db.Integer, nullable=False,
+    day_two_trophies = Column('season_day_two_trophies', Integer, nullable=False,
                                 default=Defaults.INTEGER)
-    day_three_trophies = db.Column('season_day_three_trophies', db.Integer, nullable=False,
+    day_three_trophies = Column('season_day_three_trophies', Integer, nullable=False,
                                 default=Defaults.INTEGER)
-    total_trophies = db.Column('season_total_trophies', db.Integer, nullable=False,
+    total_trophies = Column('season_total_trophies', Integer, nullable=False,
                                 default=Defaults.INTEGER)
-    participation = db.Column('season_participation', db.Integer, nullable=True,
+    participation = Column('season_participation', Integer, nullable=True,
                                 default=Defaults.INTEGER)
-    is_current = db.Column('season_is_current', db.Boolean, nullable=False)
-    club_league_games = db.relationship('ClubLeagueGames',
+    is_current = Column('season_is_current', Boolean, nullable=False)
+    club_league_games = relationship('ClubLeagueGames',
                                         backref='club_league_season', lazy=True)
 
     def __repr__(self):
