@@ -1,14 +1,17 @@
 import typing
 
-from cron_jobs.db import db
+from sqlalchemy.orm import Session
+
+from cron_jobs.db import engine
 from club_league_tracker.models.db import ClubMember
 from club_league_tracker.models.enums.club_roles import ClubRoles
 
 def save_club_members(club_members: typing.List[ClubMember]):
+    session = Session(engine)
     try:
         for member in club_members:
-            db.session.add(member)
-        db.session.commit()
+            session.add(member)
+        session.commit()
         # TODO: proper logging
         print(f"Successfully commited {len(club_members)} records to DB")
     except Exception as ex:
@@ -18,6 +21,7 @@ def save_club_members(club_members: typing.List[ClubMember]):
 def upsert_club_members(club_members: typing.List[ClubMember]):
     if len(club_members) < 1: return
 
+    session = Session(engine)
     updates = 0
     insertions = 0
     deletions = 0
@@ -37,18 +41,18 @@ def upsert_club_members(club_members: typing.List[ClubMember]):
 
     try:
         for member in new_members:
-            db.session.add(member)
+            session.add(member)
             insertions+=1
 
         for member in continuing_members:
-            db.session.merge(member)
+            session.merge(member)
             updates+=1
 
         for member in no_longer_members:
             member.role = ClubRoles.NOT_MEMBER
-            db.session.delete(member)
+            session.delete(member)
             deletions+=1
-        db.session.commit()
+        session.commit()
          # TODO: proper logging
         print(f"Successfully commited members to DB")
         print(f"commited: {len(new_members)} additions")
