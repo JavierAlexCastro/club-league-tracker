@@ -45,7 +45,7 @@ def upsert_club_members(club_members: typing.List[ClubMember]):
             updates+=1
 
         for member in no_longer_members:
-            member.role = ClubRoles.NOT_MEMBER
+            member.role = ClubRoles.NOT_MEMBER.value
             db_session.merge(member)
             deletions+=1
         db_session.commit()
