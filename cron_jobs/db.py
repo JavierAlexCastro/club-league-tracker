@@ -1,6 +1,8 @@
 import os
 
 from sqlalchemy import engine_from_config
+from sqlalchemy.orm import scoped_session, sessionmaker
+from sqlalchemy.ext.declarative import declarative_base
 
 def isDev() -> bool:
     env = os.environ['ENV']
@@ -20,3 +22,8 @@ def create_db_engine():
     return engine_from_config(db_config, prefix=config_prefix, echo=isDev())
 
 engine = create_db_engine()
+db_session = scoped_session(sessionmaker(autocommit=False,
+                                         autoflush=False,
+                                         bind=engine))
+Base = declarative_base()
+Base.query = db_session.query_property()
