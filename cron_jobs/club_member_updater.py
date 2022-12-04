@@ -29,8 +29,7 @@ def handle_club_members(members: typing.List[ClubMember]) -> None:
         raise RuntimeError("Error saving club members to DB") from ex
 
 if __name__ == "__main__":
-    api_key_raw = os.environ.get('BS_API_KEY')
-    auth_token = f"Bearer {api_key_raw}"
+    auth_token = os.environ.get('BS_API_KEY')
     club_tag = "#292QGGUUJ" # IX Electron
 
     club_members = get_members_from_api(club_tag, auth_token)
