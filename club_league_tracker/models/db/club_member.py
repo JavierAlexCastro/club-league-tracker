@@ -15,13 +15,13 @@ class ClubMember(Base):
     club_league_games = relationship('ClubLeagueGames', backref='club_member', lazy=True)
 
     @staticmethod
-    def update(session: Session, new_club_tag: str, new_name: str, new_role: str, new_trophies: int):
+    def update(session: Session, new_tag:str, new_club_tag: str, new_name: str, new_role: str, new_trophies: int):
         session.execute(
             insert(ClubMember).
-            values(club_tag=new_club_tag, member_name=new_name, member_role=new_role, member_trophies=new_trophies).
+            values(member_tag=new_tag, club_tag=new_club_tag, member_name=new_name, member_role=new_role, member_trophies=new_trophies).
             on_conflict_do_update(
                 constraint=ClubMember.__table__.primary_key,
-                set_={"club_tag": new_club_tag, "member_name": new_name, "member_role": new_role, "member_trophies": new_trophies}
+                set_={"member_tag": new_tag, "club_tag": new_club_tag, "member_name": new_name, "member_role": new_role, "member_trophies": new_trophies}
             )
         )
 

@@ -49,7 +49,7 @@ def upsert_club_members(club_members: typing.List[ClubMember]):
             insertions+=1
 
         for member in continuing_members:
-            member.update(db_session, member.club_tag, member.name, member.role, member.trophies)
+            member.update(db_session, member.tag, member.club_tag, member.name, member.role, member.trophies)
             updates+=1
 
         for member in no_longer_members:
