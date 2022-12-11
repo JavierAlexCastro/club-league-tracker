@@ -26,7 +26,7 @@ class ClubMember(Base):
         )
 
     @staticmethod
-    def soft_remove_from_club(session: Session, , new_tag: str, new_club_tag: str, new_name: str, new_role: str, new_trophies: int):
+    def soft_remove_from_club(session: Session, new_tag: str, new_club_tag: str, new_name: str, new_role: str, new_trophies: int):
         session.execute(
             insert(ClubMember).
             values(tag=new_tag, club_tag=new_club_tag, name=new_name, role=new_role, trophies=new_trophies).
