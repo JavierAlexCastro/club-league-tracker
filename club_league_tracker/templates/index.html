@@ -1,13 +1,17 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <title>Club League Tracker</title>
-</head>
-<body>
-    <h1>Club League Tracker</h1>
-    <p> Please navigate using the links below </p>
-    <nav>
-        <a href="{{ url_for('site_club_members_search') }}">Club Members</a> | 
-        <a href="{{ url_for('site_about') }}">About</a>
-    </nav>
-</body>
+    <head>
+        <title>Club League Tracker</title>
+    </head>
+    <body>
+        <h1>Club League Tracker</h1>
+        <p> Welcome to the BS Club Tracker! <br>
+            Please navigate using the links below 
+        </p>
+        <nav>
+            <!-- hardcode to IX Electron -->
+            <a href="{{ url_for('site_club_members', input_club_tag='292QGGUUJ') }}">Club Members</a> | 
+            <a href="{{ url_for('site_about') }}">About</a>
+        </nav>
+    </body>
+</html>

@@ -2,10 +2,24 @@
     <title>Club League Tracker</title>
     <h1>Club Members</h1>
     <body>
+        <p>Hi there, this website is inteded to be used by IX Electron. <br>
+            That being said, it was developed in a way that allows other clubs to use it as well. <br>
+            This, however, requires some manual action. For now it is only configured for the aforementioned club. <br>
+        </p>
+        <hr><br>
         <form method="POST">
-            <label for="do_refresh"> Club Tag: </label><br>
-            <input name="club_tag", id="club_tag"><br><br>
-            <input type="submit" value="Get Members">
+            <label for="do_refresh"> Enter Club Tag </label><br><br>
+            <input name="club_tag", id="club_tag" disabled>
+            <input type="submit" value="Get Members" disabled>
         </form>
+        <br>
     </body>
+    <hr>
+    <footer>
+        <br>
+        <nav>
+        <a href="{{ url_for('site_home') }}">Home</a> | 
+        <a href="{{ url_for('site_about') }}">About</a>
+    </nav>
+    </footer>
 </html>

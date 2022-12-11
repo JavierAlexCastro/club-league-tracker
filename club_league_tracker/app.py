@@ -85,6 +85,7 @@ def site_about():
 @app.route('/club-members', methods=['GET', 'POST'])
 def site_club_members_search():
     if request.method == 'POST':
+        return redirect(url_for('site_home')) # DISABLES CLUB SEARCH
         # TODO: validate <club_tag>
         club_tag = request.form.get('club_tag')
         return redirect(
