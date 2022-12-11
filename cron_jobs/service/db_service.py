@@ -28,8 +28,8 @@ def upsert_club_members(club_members: typing.List[ClubMember]):
     except Exception as ex:
         raise RuntimeError("Failed to get club_members from DB") from ex
 
-    db_members_tags = (member.tag for member in db_members)
-    req_members_tags = (member.tag for member in club_members)
+    db_members_tags = [member.tag for member in db_members]
+    req_members_tags = [member.tag for member in club_members]
 
     no_longer_members = [i for i in db_members if not i.club_tag in req_members_tags]
     new_members = [i for i in club_members if not i.club_tag in db_members_tags]
