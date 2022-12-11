@@ -18,7 +18,7 @@ class ClubMember(Base):
     def update(session: Session, new_name: str, new_role: str, new_trophies: int):
         session.execute(
             insert(ClubMember).
-            values(name=new_name, role=new_role, trophies=new_trophies).
+            values(member_name=new_name, member_role=new_role, member_trophies=new_trophies).
             on_conflict_do_update(
                 constraint=ClubMember.__table__.primary_key,
                 set_={"member_name": new_name, "member_role": new_role, "member_trophies": new_trophies}
@@ -29,7 +29,7 @@ class ClubMember(Base):
     def soft_remove_from_club(session: Session, new_role: str):
         session.execute(
             insert(ClubMember).
-            values(role=new_role).
+            values(member_role=new_role).
             on_conflict_do_update(
                 constraint=ClubMember.__table__.primary_key,
                 set_={"member_role": new_role}
