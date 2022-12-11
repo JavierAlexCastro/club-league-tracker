@@ -55,7 +55,7 @@ def upsert_club_members(club_members: typing.List[ClubMember]):
         print(f"commited: {len(continuing_members)} updates")
         print(f"commited: {len(no_longer_members)} de-activations")
     except Exception as ex:
-        raise RuntimeError("Failed to commit club_members to DB") from ex
+        raise RuntimeError(f"Failed to commit club_members to DB. Insertions {insertions}, Updates {updates}, Deletions {deletions}") from ex
 
 #TODO: this method should not sort. Instead a sort__service should exist with sorting methods as needed
 def get_club_members(club_tag: str) -> typing.List[ClubMember]:
