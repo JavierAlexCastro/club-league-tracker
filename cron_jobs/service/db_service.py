@@ -35,11 +35,13 @@ def upsert_club_members(club_members: typing.List[ClubMember]):
     no_longer_members = []
     for member in db_members:
         if member.club_tag not in req_members_tags:
+            print(f"No longer member: {member.tag}")
             no_longer_members.append(member)
 
     new_members = []
     for member in club_members:
         if member.club_tag not in db_members_tags:
+            print(f"New member: {member.tag}")
             new_members.append(member)
 
     continuing_members = []
