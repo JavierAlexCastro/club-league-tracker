@@ -87,29 +87,19 @@ def site_club_members_search():
     if request.method == 'POST':
         # TODO: validate <club_tag>
         club_tag = request.form.get('club_tag')
-        do_refresh = request.form.get('do_refresh')
         return redirect(
-            url_for('site_club_members', input_club_tag=str(club_tag), refresh=do_refresh))
+            url_for('site_club_members', input_club_tag=str(club_tag)))
 
     return render_template('members_search.html')
 
 @app.route('/club-members/<input_club_tag>')
 def site_club_members(input_club_tag: str):
     club_tag = input_club_tag.replace('#', '')
-    bs_api_key = app.config['BS_API_KEY']
     members = []
     try:
-        if 'refresh' in request.args and request.args['refresh'] == 'true':
-            # TODO: proper logging
-            print("Getting members from API")
-            members = get_club_members(club_tag=f'#{club_tag}',
-                                        auth_token=bs_api_key,
-                                        proxies=fixie_proxy)
-            db_service.save_club_members(members)
-        else:
-            # TODO: proper logging
-            print("Getting members from DB")
-            members = db_service.get_club_members(club_tag)
+        # TODO: proper logging
+        print("Getting members from DB")
+        members = db_service.get_club_members(club_tag)
         print(f"Retrieved {str(len(members))} club_members: ")
     except Exception as ex:
         # TODO: proper logging and exception handling

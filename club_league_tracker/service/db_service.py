@@ -2,6 +2,7 @@ import typing
 
 from club_league_tracker.db import db_session
 from club_league_tracker.models.db import ClubMember
+from club_league_tracker.models.enums.club_roles import ClubRoles
 
 def save_club_members(club_members: typing.List[ClubMember]):
     try:
@@ -19,6 +20,7 @@ def get_club_members(club_tag: str) -> typing.List[ClubMember]:
     try:
         members = ClubMember.query \
                 .filter(ClubMember.club_tag.endswith(club_tag)) \
+                .filter(ClubMember.role.isnot(ClubRoles.NOT_MEMBER.value)) \
                 .order_by(ClubMember.trophies.desc()) \
                 .all()
     except Exception as ex:
