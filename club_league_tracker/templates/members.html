@@ -5,6 +5,7 @@
         <table cellspacing="3" cellpadding="5" bgcolor="#000000">
             <thead>
                 <tr bgcolor="#ffffff">
+                    <th>No.</th>
                     <th>Tag</th>
                     <th>ClubTag</th>
                     <th>Name</th>
@@ -15,6 +16,7 @@
             <tbody>
                 {% for member in member_list %}
                 <tr bgcolor="#ffffff">
+                    <td>{{ loop.index }}</td>
                     <td>{{ member.tag }}</td>
                     <td>{{ member.club_tag }}</td>
                     <td>{{ member.name }}</td>
