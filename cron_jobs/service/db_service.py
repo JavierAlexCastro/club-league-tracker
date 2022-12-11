@@ -53,7 +53,7 @@ def upsert_club_members(club_members: typing.List[ClubMember]):
             updates+=1
 
         for member in no_longer_members:
-            member.soft_remove_from_club(db_session, ClubRoles.NOT_MEMBER.value)
+            member.update(db_session, member.tag, member.club_tag, member.name, ClubRoles.NOT_MEMBER.value, member.trophies)
             deletions+=1
         db_session.commit()
          # TODO: proper logging

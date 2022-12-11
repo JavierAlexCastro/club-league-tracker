@@ -25,17 +25,6 @@ class ClubMember(Base):
             )
         )
 
-    @staticmethod
-    def soft_remove_from_club(session: Session, new_role: str):
-        session.execute(
-            insert(ClubMember).
-            values(member_role=new_role).
-            on_conflict_do_update(
-                constraint=ClubMember.__table__.primary_key,
-                set_={"member_role": new_role}
-            )
-        )
-
     def __repr__(self):
         return f"Club Member:\n" \
                 f"|  tag({self.tag})\n" \
