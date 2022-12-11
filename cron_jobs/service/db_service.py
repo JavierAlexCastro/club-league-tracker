@@ -36,12 +36,12 @@ def upsert_club_members(club_members: typing.List[ClubMember]):
     # continuing_members = [i for i in club_members if i.club_tag in db_members_tags]
     continuing_members = [i for i in db_members if i.club_tag in req_members_tags]
 
-    print(f"db member tags: {len(db_members_tags)}")
-    print(f"req member tags: {len(req_members_tags)}")
+    print(f"db member tags: {len(db_members_tags)}, {db_members_tags}")
+    print(f"req member tags: {len(req_members_tags)}, {req_members_tags}")
 
-    print(f"No longer members: {len(no_longer_members)}")
-    print(f"New members: {len(new_members)}")
-    print(f"Continuing members: {len(continuing_members)}")
+    print(f"No longer members: {len(no_longer_members)}, {no_longer_members}")
+    print(f"New members: {len(new_members)}, {new_members}")
+    print(f"Continuing members: {len(continuing_members)}, {new_members}")
 
     try:
         for member in new_members:
