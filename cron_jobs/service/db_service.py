@@ -36,17 +36,24 @@ def upsert_club_members(club_members: typing.List[ClubMember]):
     # continuing_members = [i for i in club_members if i.club_tag in db_members_tags]
     continuing_members = [i for i in db_members if i.club_tag in req_members_tags]
 
+    print(f"db member tags: {len(db_members_tags)}")
+    print(f"req member tags: {len(req_members_tags)}")
+
+    print(f"No longer members: {len(no_longer_members)}")
+    print(f"New members: {len(new_members)}")
+    print(f"Continuing members: {len(continuing_members)}")
+
     try:
         for member in new_members:
             db_session.add(member)
             insertions+=1
 
         for member in continuing_members:
-            member.update(db_session, member.tag, member.club_tag, member.name, member.role, member.trophies)
+            member.update(db_session, member.name, member.role, member.trophies)
             updates+=1
 
         for member in no_longer_members:
-            member.soft_remove_from_club(db_session, member.tag, member.club_tag, member.name, ClubRoles.NOT_MEMBER.value, member.trophies)
+            member.soft_remove_from_club(db_session, ClubRoles.NOT_MEMBER.value)
             deletions+=1
         db_session.commit()
          # TODO: proper logging
