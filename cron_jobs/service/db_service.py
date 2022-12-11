@@ -70,7 +70,7 @@ def get_club_members(club_tag: str) -> typing.List[ClubMember]:
     try:
         members = ClubMember.query \
                 .filter(ClubMember.club_tag.endswith(club_tag)) \
-                .filger(ClubMember.role.isnot(ClubRoles.NOT_MEMBER.value)) \
+                .filger(ClubMember.role.is_distinct_from(ClubRoles.NOT_MEMBER.value)) \
                 .order_by(ClubMember.trophies.desc()) \
                 .all()
     except Exception as ex:
