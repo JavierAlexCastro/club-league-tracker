@@ -31,28 +31,10 @@ def upsert_club_members(club_members: typing.List[ClubMember]):
     db_members_tags = [member.tag for member in db_members]
     req_members_tags = [member.tag for member in club_members]
 
-    # no_longer_members = [i for i in db_members if i.club_tag not in req_members_tags]
-    no_longer_members = []
-    for member in db_members:
-        if member.club_tag not in req_members_tags:
-            print(f"No longer member: {member.tag}")
-            no_longer_members.append(member)
-
-    new_members = []
-    for member in club_members:
-        if member.club_tag not in db_members_tags:
-            print(f"New member: {member.tag}")
-            new_members.append(member)
-
-    continuing_members = []
-    for member in club_members:
-        if member.club_tag in db_members:
-            continuing_members.append(member)
-            
-
-    # new_members = [i for i in club_members if i.club_tag not in db_members_tags]
-    # continuing_members = [i for i in club_members if i.club_tag in db_members_tags]
-    # continuing_members = [i for i in db_members if i.club_tag in req_members_tags]
+    no_longer_members = [i for i in db_members if i.tag not in req_members_tags]
+    new_members = [i for i in club_members if i.tag not in db_members_tags]
+    continuing_members = [i for i in club_members if i.tag in db_members_tags]
+    # continuing_members = [i for i in db_members if i.tag in req_members_tags]
 
     print(f"db member tags: {len(db_members_tags)}")
     print(f"req member tags: {len(req_members_tags)}")
