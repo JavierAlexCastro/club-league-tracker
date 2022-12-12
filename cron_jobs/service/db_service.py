@@ -81,8 +81,10 @@ def upsert_club_members(club_members: typing.List[ClubMember], auth_token: str):
 
             member_details = get_member_details_from_api(member.tag, auth_token)
             db_member_details = db_get_club_member_details(member.tag)
-            print(f"For {member.tag} got details: {db_member_details}")
-            member_details.update(db_session, member.tag, db_member_details.start_date, None, member_details.victories_trios, 
+            if db_member_details is None: # probably because was added before member_details were a thing
+                db_session.add(member_details)
+            else:
+                member_details.update(db_session, member.tag, db_member_details.start_date, None, member_details.victories_trios, 
                                     member_details.victories_duos, member_details.victories_solo)
             updates+=1
 
@@ -91,9 +93,11 @@ def upsert_club_members(club_members: typing.List[ClubMember], auth_token: str):
 
             member_details = get_member_details_from_api(member.tag, auth_token)
             db_member_details = db_get_club_member_details(member.tag)
-            print(f"For {member.tag} got details: {db_member_details}")
-            member_details.update(db_session, member.tag, db_member_details.start_date, func.now(), member_details.victories_trios, 
-                                    member_details.victories_duos, member_details.victories_solo)
+            if db_member_details is None: # probably because was added before member_details were a thing
+                db_session.add(member_details)
+            else:
+                member_details.update(db_session, member.tag, db_member_details.start_date, func.now(), member_details.victories_trios, 
+                                        member_details.victories_duos, member_details.victories_solo)
             deletions+=1
         db_session.commit()
          # TODO: proper logging
