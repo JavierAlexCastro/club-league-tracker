@@ -35,7 +35,7 @@ def get_club_member_details(member_tag:str, auth_token: str, proxies: dict) -> C
         if 'duoVictories' in response_club_member:
             res_victories_duos = response_club_member['duoVictories']
         if 'soloVictories' in response_club_member:
-            res_victories_duos = response_club_member['soloVictories']
+            res_victories_solo = response_club_member['soloVictories']
 
         member_details = ClubMemberDetails(member_tag = res_tag, start_date = res_start_date, departure_date = res_departure_date,
                         victories_trios = res_victories_trios, victories_duos = res_victories_duos, victories_solo = res_victories_solo)
