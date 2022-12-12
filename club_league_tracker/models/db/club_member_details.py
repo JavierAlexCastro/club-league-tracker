@@ -8,7 +8,7 @@ from club_league_tracker.models.enums.defaults import Defaults
 class ClubMemberDetails(Base):
     __tablename__ = 'club_member_details'
     member_tag = Column(String(16), ForeignKey('club_member.member_tag'), nullable=False, primary_key=True)
-    start_date = Column(DateTime(timezone=True), nullable=False, server_default=func.now())
+    start_date = Column(DateTime(timezone=True), nullable=True, server_default=None)
     departure_date = Column(DateTime(timezone=True), nullable=True, server_default=None)
     victories_trios = Column(Integer, nullable=False, default=Defaults.INTEGER.value)
     victories_duos = Column(Integer, nullable=False, default=Defaults.INTEGER.value)

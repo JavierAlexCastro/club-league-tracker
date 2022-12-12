@@ -1,8 +1,17 @@
 import typing
 
 from cron_jobs.db import db_session
+
+from sqlalchemy.sql import func
+
 from club_league_tracker.models.db import ClubMember
+from club_league_tracker.models.db import ClubMemberDetails
 from club_league_tracker.models.enums.club_roles import ClubRoles
+from club_league_tracker.service.db_service import get_club_member_details as db_get_club_member_details
+
+from club_league_tracker.networking.bs_players import get_club_member_details as net_get_club_member_details
+
+# TODO: factor whole class, especially separate responsibilities and reduce tight coupling
 
 def save_club_members(club_members: typing.List[ClubMember]):
     try:
@@ -14,8 +23,22 @@ def save_club_members(club_members: typing.List[ClubMember]):
     except Exception as ex:
         raise RuntimeError("Failed to commit club_members to DB") from ex
 
+# TODO this should go in new api_service
+def get_member_details_from_api(member_tag: str, token: str) -> ClubMemberDetails:
+    member_details = None
+    try:
+        member_details = net_get_club_member_details(member_tag=member_tag,
+                                                auth_token=token,
+                                                proxies=None)
+        print(f"Got club member details from API for {member_tag}")
+    except Exception as ex:
+        raise RuntimeError(f"Error gettting club member details from API for member {member_tag}")
+    
+    return member_details
+
 # TODO: remove side effect of updating no_longer_members into its own function
-def upsert_club_members(club_members: typing.List[ClubMember]):
+# TODO: refactor so db_service only does db operations and not other logic
+def upsert_club_members(club_members: typing.List[ClubMember], auth_token: str):
     if len(club_members) < 1: return
 
     updates = 0
@@ -46,14 +69,29 @@ def upsert_club_members(club_members: typing.List[ClubMember]):
     try:
         for member in new_members:
             db_session.add(member)
+
+            member_details = get_member_details_from_api(member.tag, auth_token)
+            member_details.start_date = func.now()
+            db_session.add(member_details)
+
             insertions+=1
 
         for member in continuing_members:
             member.update(db_session, member.tag, member.club_tag, member.name, member.role, member.trophies)
+
+            member_details = get_member_details_from_api(member.tag, auth_token)
+            db_member_details = db_get_club_member_details(member.tag)
+            member_details.update(db_session, member.tag, db_member_details.start_date, None, member_details.victories_trios, 
+                                    member_details.victories_duos, member_details.victories_solo)
             updates+=1
 
         for member in no_longer_members:
             member.update(db_session, member.tag, member.club_tag, member.name, ClubRoles.NOT_MEMBER.value, member.trophies)
+
+            member_details = get_member_details_from_api(member.tag, auth_token)
+            db_member_details = db_get_club_member_details(member.tag)
+            member_details.update(db_session, member.tag, db_member_details.start_date, func.now(), member_details.victories_trios, 
+                                    member_details.victories_duos, member_details.victories_solo)
             deletions+=1
         db_session.commit()
          # TODO: proper logging
