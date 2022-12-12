@@ -1,0 +1,28 @@
+<html>
+    <title>Club League Tracker</title>
+    <h1>Member Details</h1>
+    <body>
+        <ul>
+            <li>Tag     : {{ member.tag }}</li>
+            <li>Name    : {{ member.name }}</li>
+            <li>Role    : {{ member.role }}</li>
+            <li>Trophies: {{ member.trophies }}</li>
+            <br>
+            <li>Member Since  : {{ member_details.start_date }}</li>
+            <li>Departure Date: {{ member_details.departure_date }}</li>
+            <br>
+            <li>3v3 Victories : {{ member_details.victories_trios }}</li>
+            <li>Duo Victories : {{ member_details.victories_duos }}</li>
+            <li>Solo Victories: {{ member_details.victories_solo }}</li>
+        </ul>
+        <br><hr>
+        <br><br>
+        <p>Club league game data coming soon ...</p>
+        <br><br>
+        <hr><br>
+    <footer>
+        <nav>
+        <a href="{{ url_for('site_home') }}">Home</a>
+    </nav>
+    </footer>
+</html>

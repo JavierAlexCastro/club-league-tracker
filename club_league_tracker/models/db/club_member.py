@@ -13,6 +13,7 @@ class ClubMember(Base):
     role = Column('member_role', String(32), nullable=False, default=Defaults.STRING)
     trophies = Column('member_trophies', Integer, nullable=False, default=Defaults.INTEGER)
     club_league_games = relationship('ClubLeagueGames', backref='club_member', lazy=True)
+    club_member_details = relationship('ClubMemberDetails', backref='club_member', lazy=True)
 
     @staticmethod
     def update(session: Session, new_tag:str, new_club_tag: str, new_name: str, new_role: str, new_trophies: int):

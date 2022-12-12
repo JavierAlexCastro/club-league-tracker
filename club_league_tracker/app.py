@@ -4,8 +4,6 @@ import json
 from flask import Flask, render_template, request, url_for, redirect
 from club_league_tracker.db import db_session, create_db
 from club_league_tracker.service import db_service
-from club_league_tracker.models.db import ClubMember
-from club_league_tracker.networking.bs_clubs import get_club_members
 
 def get_fixie_proxy():
     fixie_proxy = None
@@ -68,7 +66,7 @@ def create_app(flask_env: str = None):
 
 env = os.environ.get('ENV')
 app = create_app(env)
-# create_db()
+create_db()
 app.app_context().push()
 
 fixie_proxy = get_fixie_proxy()
@@ -95,18 +93,45 @@ def site_club_members_search():
 
 @app.route('/club-members/<input_club_tag>')
 def site_club_members(input_club_tag: str):
-    club_tag = input_club_tag.replace('#', '')
+    # TODO: sanitize path param
+    club_tag = input_club_tag.replace('#', '') #TODO: standardize who adds '#'
     members = []
     try:
         # TODO: proper logging
-        print("Getting members from DB")
+        print(f"Getting club members from DB for club {input_club_tag}")
         members = db_service.get_club_members(club_tag)
-        print(f"Retrieved {str(len(members))} club_members: ")
+        print(f"Retrieved {str(len(members))} club_members for club {input_club_tag}")
     except Exception as ex:
         # TODO: proper logging and exception handling
         raise RuntimeError("Error getting club members") from ex
 
     return render_template('members.html', member_list = members)
+
+@app.route('/member')
+def show_member_details():
+    query_param_key = 'tag'
+    args = request.args
+    raw_tag = args.get(query_param_key)
+    # TODO: sanitize path param
+    if raw_tag is None:
+        # TODO: proper logging and exception handling
+        raise ValueError(f"Invalid club member tag passed through query parameter. \
+            Parameter must be {query_param_key}")
+
+    tag = f"#{raw_tag}"
+    member = None
+    member_details = None
+    try:
+        # TODO: proper logging
+        print(f"Getting member details from DB for member {tag}")
+        member = db_service.get_club_member(tag)
+        member_details = db_service.get_club_member_details(tag)
+        print(f"Retrieved member details for member {tag}")
+    except Exception as ex:
+        # TODO: proper logging and exception handling
+        raise RuntimeError("Error getting club member details") from ex
+
+    return render_template('member.html', member = member, member_details = member_details)
 
 @app.teardown_appcontext
 def shutdown_session(exception=None):

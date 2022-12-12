@@ -1,4 +1,5 @@
 from club_league_tracker.models.db.club_member import *
+from club_league_tracker.models.db.club_member_details import *
 from club_league_tracker.models.db.club_league_season import *
 from club_league_tracker.models.db.club_league_games import *
 

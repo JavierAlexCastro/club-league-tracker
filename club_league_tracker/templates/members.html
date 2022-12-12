@@ -1,6 +1,8 @@
 <html>
     <title>Club League Tracker</title>
     <h1>Club Members - IX Electron</h1>
+    <p>Click a name to view member details</p>
+    <br>
     <body>
         <table cellspacing="3" cellpadding="5" bgcolor="#000000">
             <thead>
@@ -19,7 +21,7 @@
                     <td>{{ loop.index }}</td>
                     <td>{{ member.tag }}</td>
                     <td>{{ member.club_tag }}</td>
-                    <td>{{ member.name }}</td>
+                    <td><a href="{{ url_for('show_member_details', tag=member.tag[1:]) }}">{{ member.name }}</a></td>
                     <td>{{ member.role }}</td>
                     <td>{{ member.trophies }}</td>
                 </tr>
@@ -35,4 +37,4 @@
         <a href="{{ url_for('site_club_members_search') }}">Looking for other clubs?</a>
     </nav>
     </footer>
- </html>
+</html>

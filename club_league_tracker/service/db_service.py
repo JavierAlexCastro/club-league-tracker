@@ -2,6 +2,7 @@ import typing
 
 from club_league_tracker.db import db_session
 from club_league_tracker.models.db import ClubMember
+from club_league_tracker.models.db import ClubMemberDetails
 from club_league_tracker.models.enums.club_roles import ClubRoles
 
 def save_club_members(club_members: typing.List[ClubMember]):
@@ -27,3 +28,21 @@ def get_club_members(club_tag: str) -> typing.List[ClubMember]:
         raise RuntimeError("Failed to get club_members from DB") from ex
     
     return members
+
+def get_club_member(member_tag: str) -> ClubMember:
+    member = None
+    try:
+        member = ClubMember.query.get(member_tag)
+    except Exception as ex:
+        raise RuntimeError(f"Failed to get club_member {member_tag} from DB") from ex
+    
+    return member
+
+def get_club_member_details(member_tag: str) -> ClubMemberDetails:
+    member_details = None
+    try:
+        member_details = ClubMemberDetails.query.get(member_tag)
+    except Exception as ex:
+        raise RuntimeError(f"Failed to get club_member_details for member {member_tag} from DB") from ex
+    
+    return member_details
