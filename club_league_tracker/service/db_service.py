@@ -31,8 +31,10 @@ def get_club_members(club_tag: str) -> typing.List[ClubMember]:
 
 def get_club_member(member_tag: str) -> ClubMember:
     member = None
+    print(f"Fetching club member {member_tag} from DB")
     try:
         member = ClubMember.query.get(member_tag)
+        print(f"Got club member {member_tag} from DB")
     except Exception as ex:
         raise RuntimeError(f"Failed to get club_member {member_tag} from DB") from ex
     
@@ -40,8 +42,10 @@ def get_club_member(member_tag: str) -> ClubMember:
 
 def get_club_member_details(member_tag: str) -> ClubMemberDetails:
     member_details = None
+    print(f"Fetching club member details from DB for {member_tag}")
     try:
         member_details = ClubMemberDetails.query.get(member_tag)
+        print(f"Got club member details from DB for {member_tag}")
     except Exception as ex:
         raise RuntimeError(f"Failed to get club_member_details for member {member_tag} from DB") from ex
     
