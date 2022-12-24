@@ -6,23 +6,23 @@ from club_league_tracker.models.enums.defaults import Defaults
 class ClubLeagueSeason(Base):
     __tablename__ = 'club_league_season'
     id = Column('season_id', Integer, nullable=False, primary_key=True)
-    week = Column('season_week', String(16), nullable=False, default='unknown')
+    week = Column('season_week', String(16), nullable=True, default=Defaults.STRING)
     start_members = Column('season_start_members', Integer, nullable=True,
                                 default=Defaults.INTEGER)
     end_members = Column('season_end_members', Integer, nullable=True,
                                 default=Defaults.INTEGER)
-    day_one_trophies = Column('season_day_one_trophies', Integer, nullable=False,
+    day_one_trophies = Column('season_day_one_trophies', Integer, nullable=True,
                                 default=Defaults.INTEGER)
-    day_two_trophies = Column('season_day_two_trophies', Integer, nullable=False,
+    day_two_trophies = Column('season_day_two_trophies', Integer, nullable=True,
                                 default=Defaults.INTEGER)
-    day_three_trophies = Column('season_day_three_trophies', Integer, nullable=False,
+    day_three_trophies = Column('season_day_three_trophies', Integer, nullable=True,
                                 default=Defaults.INTEGER)
-    total_trophies = Column('season_total_trophies', Integer, nullable=False,
+    total_trophies = Column('season_total_trophies', Integer, nullable=True,
                                 default=Defaults.INTEGER)
     participation = Column('season_participation', Integer, nullable=True,
                                 default=Defaults.INTEGER)
     is_current = Column('season_is_current', Boolean, nullable=False)
-    club_league_games = relationship('ClubLeagueGames',
+    club_league_games = relationship('ClubLeagueGame',
                                         backref='club_league_season', lazy=True)
 
     def __repr__(self):

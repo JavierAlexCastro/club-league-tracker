@@ -3,6 +3,7 @@ import typing
 from club_league_tracker.db import db_session
 from club_league_tracker.models.db import ClubMember
 from club_league_tracker.models.db import ClubMemberDetails
+from club_league_tracker.models.db import ClubLeagueSeason
 from club_league_tracker.models.enums.club_roles import ClubRoles
 
 def save_club_members(club_members: typing.List[ClubMember]):
@@ -50,3 +51,26 @@ def get_club_member_details(member_tag: str) -> ClubMemberDetails:
         raise RuntimeError(f"Failed to get club_member_details for member {member_tag} from DB") from ex
     
     return member_details
+
+def get_club_league_season(season_id: str) -> ClubLeagueSeason:
+    cl_season = None
+    print(f"Fetching club league season with id {season_id} from DB")
+    try:
+        cl_season = ClubLeagueSeason.query.get(season_id)
+        print(f"Got club league season from DB for {season_id}")
+    except Exception as ex:
+        raise RuntimeError(f"Failed to get club_league_season with id {season_id} from DB") from ex
+    return cl_season
+
+def get_latest_club_league_season() -> ClubLeagueSeason:
+    cl_season = None
+    print("Fetching latest club league season from DB")
+    try:
+        cl_season = ClubLeagueSeason.query \
+            .filter(ClubLeagueSeason.is_current.is_(True))
+        if cl_season is None:
+            raise RuntimeError("Could not find latest club_leage_season")
+        print(f"Got latest club league season from DB")
+    except Exception as ex:
+        raise RuntimeError(f"Failed to get latest club_league_season from DB") from ex
+    return cl_season

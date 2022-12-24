@@ -1,11 +1,16 @@
 import urllib.parse
+import typing
 
 from club_league_tracker.models.db.club_member_details import ClubMemberDetails
+from club_league_tracker.models.db.club_league_game import ClubLeagueGame
 from club_league_tracker.models.enums.defaults import Defaults
 from club_league_tracker.networking.utils import RequestContents, RetryOptions, RequestType
 from club_league_tracker.networking.utils import do_retryable_request
 
-def get_club_member_details(member_tag:str, auth_token: str, proxies: dict) -> ClubMemberDetails:
+cl_game_type = ["teamRanked", "ranked"]
+cl_trophy_change = [3, 5, 7, 9]
+
+def get_club_member_details(member_tag: str, auth_token: str, proxies: dict) -> ClubMemberDetails:
     encoded_member_tag = urllib.parse.quote(member_tag.encode('utf8'))
     request_retry_opts = RetryOptions(max_retries = 1, retry_buffer_seconds = 5)
     request_contents = RequestContents(
@@ -44,3 +49,55 @@ def get_club_member_details(member_tag:str, auth_token: str, proxies: dict) -> C
         raise RuntimeError(f"Error getting club member details for member {member_tag}") from ex
 
     return member_details
+
+def get_club_member_cl_games(member_tag: str, member_name: str, season_id: int, auth_token: str, proxies: dict) -> typing.List[ClubLeagueGame]:
+    encoded_member_tag = urllib.parse.quote(member_tag.encode('utf8'))
+    request_retry_opts = RetryOptions(max_retries = 1, retry_buffer_seconds = 5)
+    request_contents = RequestContents(
+        url = f"https://api.brawlstars.com/v1/players/{encoded_member_tag}/battlelog",
+        headers = {
+            "Authorization": f"Bearer {auth_token}"
+        },
+        timeout_seconds = 3,
+        proxy = proxies
+    )
+
+    res_type = Defaults.STRING.value
+    res_game_date = Defaults.STRING.value
+    res_game_mode = Defaults.STRING.value
+    res_game_map = Defaults.STRING.value
+    res_game_result = Defaults.STRING.value
+    res_game_trophies = Defaults.INTEGER.value
+
+    club_league_games = []
+    try:
+        response_club_member_games = do_retryable_request(request_type = RequestType.GET,
+                                                request_contents = request_contents,
+                                                retry_options = request_retry_opts).json()["items"]
+        if 'battleTime' in response_club_member_games:
+            res_game_date = str(response_club_member_games['battleTime'])
+        if 'event' in response_club_member_games:
+            res_event = response_club_member_games['event']
+            if 'mode' in res_event:
+                res_game_mode = str(res_event['mode'])
+            if 'map' in res_event:
+                res_game_map = str(res_event['map'])
+        if 'battle' in response_club_member_games:
+            res_battle = response_club_member_games['battle']
+            if 'type' in res_battle:
+                res_type = str(res_battle['type'])
+            if 'result' in res_battle:
+                res_game_result = str(res_battle['result'])
+            if 'trophyChange' in res_battle:
+                res_game_trophies = res_battle['trophyChange']
+
+        # This determines if it is a club league game compared to just a regular game
+        if res_type in cl_game_type and res_game_trophies in cl_trophy_change:
+            club_league_games.append(ClubLeagueGame(season_id = season_id, game_day = None, game_date = res_game_date,
+                        game_mode = res_game_mode, game_map = res_game_map, game_result = res_game_result,
+                        game_trophies = res_game_trophies, member_tag = member_tag, member_name = member_name))
+    except Exception as ex:
+        # TODO: proper logging
+        raise RuntimeError(f"Error getting battle log for member {member_tag}") from ex
+
+    return club_league_games
