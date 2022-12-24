@@ -7,8 +7,12 @@ from cron_jobs.service import db_service
 
 def deprecate_previous_season() -> None:
     current_season = db_service.fetch_current_cl_season()
-    current_season.is_current = False
-    db_service.save_club_league_season(current_season)
+    if current_season is not None:
+        current_season.is_current = False
+        db_service.save_club_league_season(current_season)
+        print(f"Deprecated season {current_season.week}")
+    else:
+        print("Warning: Found no previous club league season to deprecate")
 
 def create_season(club_tag: str, token: str) -> ClubLeagueSeason:
     today = datetime.now().isocalendar()
@@ -39,6 +43,9 @@ def create_season(club_tag: str, token: str) -> ClubLeagueSeason:
 if __name__ == "__main__":
     auth_token = os.environ.get('BS_API_KEY')
     club_tag = "#292QGGUUJ" # IX Electron
+
     new_season = create_season(club_tag, auth_token)
+    print(f"Created club league season {new_season.week}")
     deprecate_previous_season()
     db_service.save_club_league_season(new_season)
+    print(f"Saved season active club league season {new_season.week} to DB")
