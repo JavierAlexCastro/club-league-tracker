@@ -29,7 +29,7 @@ def create_season(club_tag: str, token: str) -> ClubLeagueSeason:
     participation = None
 
     return ClubLeagueSeason(
-        season_week = season_week,
+        week = season_week,
         start_members = member_count,
         end_members = end_members,
         day_one_trophies = one_trophies,
