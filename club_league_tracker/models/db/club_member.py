@@ -12,7 +12,7 @@ class ClubMember(Base):
     name = Column('member_name', String(32), nullable=False, default=Defaults.STRING)
     role = Column('member_role', String(32), nullable=False, default=Defaults.STRING)
     trophies = Column('member_trophies', Integer, nullable=False, default=Defaults.INTEGER)
-    club_league_games = relationship('ClubLeagueGames', backref='club_member', lazy=True)
+    club_league_games = relationship('ClubLeagueGame', backref='club_member', lazy=True)
     club_member_details = relationship('ClubMemberDetails', backref='club_member', lazy=True)
 
     @staticmethod

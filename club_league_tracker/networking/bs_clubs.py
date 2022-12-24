@@ -47,7 +47,7 @@ def get_club_members(club_tag:str, auth_token: str, proxies: dict) -> typing.Lis
                             role = res_role, trophies = res_trophies))
     except Exception as ex:
         # TODO: proper logging
-        raise RuntimeError(f"Error getting club members for club {club_tag}") from ex
+        raise RuntimeError(f"Error getting club members for club {club_tag} from API") from ex
 
     return club_members
 
