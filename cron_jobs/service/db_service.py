@@ -34,7 +34,7 @@ def deprecate_club_league_season(season: ClubLeagueSeason):
     try:
         print(f"Deprecating season {season.week}")
         setattr(season, 'season_is_current', False)
-        # db_session.add(season)
+        db_session.add(season)
         db_session.commit()
         print(f"Deprecated season {season.week}")
     except Exception as ex:
