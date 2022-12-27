@@ -14,7 +14,7 @@ def fetch_current_cl_season() -> ClubLeagueSeason:
     current_season = None
     try:
         print("Fetching current club league season")
-        current_season = ClubLeagueSeason.query \
+        current_season = db_session.query(ClubLeagueSeason) \
             .filter(ClubLeagueSeason.is_current.is_(True)) \
             .first()
     except Exception as ex:
@@ -33,9 +33,8 @@ def save_club_league_season(season: ClubLeagueSeason):
 def deprecate_club_league_season(season: ClubLeagueSeason):
     try:
         print(f"Deprecating season {season.week}")
-        updated_season = db_session.merge(season)
-        setattr(updated_season, 'season_is_current', False)
-        db_session.add(updated_season)
+        setattr(season, 'season_is_current', False)
+        # db_session.add(season)
         db_session.commit()
         print(f"Deprecated season {season.week}")
     except Exception as ex:
