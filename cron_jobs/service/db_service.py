@@ -14,12 +14,9 @@ def fetch_current_cl_season() -> ClubLeagueSeason:
     current_season = None
     try:
         print("Fetching current club league season")
-        current_seasons = ClubLeagueSeason.query \
+        current_season = ClubLeagueSeason.query \
             .filter(ClubLeagueSeason.is_current.is_(True)) \
-            .all()
-        if current_seasons is not None and len(current_seasons) > 0:
-            print(f"Found {len(current_seasons)} current seasons")
-            current_season = current_seasons[0]
+            .first()
     except Exception as ex:
         raise RuntimeError("Failed to fetch current club league season from DB") from ex
     
@@ -32,6 +29,15 @@ def save_club_league_season(season: ClubLeagueSeason):
         print(f"Successfully added club league season {season.week} to DB")
     except Exception as ex:
         raise RuntimeError(f"Failed to commit club_league_season {season.week} to DB") from ex
+
+def deprecate_club_league_season(season: ClubLeagueSeason):
+    try:
+        print(f"Deprecating season {season.week}")
+        season.is_current = False
+        db_session.commit()
+        print(f"Deprecated season {season.week}")
+    except Exception as ex:
+        raise RuntimeError(f"Failed to update club league season {season.week} on DB") from ex
 
 def save_club_members(club_members: typing.List[ClubMember]):
     try:
