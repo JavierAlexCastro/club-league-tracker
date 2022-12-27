@@ -8,6 +8,7 @@ from cron_jobs.service import db_service
 def deprecate_previous_season() -> None:
     current_season = db_service.fetch_current_cl_season()
     if current_season is not None:
+        print(f"Deprecating season {current_season.week}")
         current_season.is_current = False
         db_service.save_club_league_season(current_season)
         print(f"Deprecated season {current_season.week}")

@@ -18,6 +18,7 @@ def fetch_current_cl_season() -> ClubLeagueSeason:
             .filter(ClubLeagueSeason.is_current.is_(True)) \
             .all()
         if current_seasons is not None and len(current_seasons) > 0:
+            print(f"Found {len(current_seasons)} current seasons")
             current_season = current_seasons[0]
     except Exception as ex:
         raise RuntimeError("Failed to fetch current club league season from DB") from ex
