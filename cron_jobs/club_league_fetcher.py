@@ -11,7 +11,7 @@ if __name__ == "__main__":
     club_tag = "#292QGGUUJ" # IX Electron
 
     season = db_service.fetch_current_cl_season()
-    members = db_service.get_club_members()
+    members = db_service.get_club_members(club_tag)
 
     if members is not None:
         for member in members:
