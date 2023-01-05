@@ -73,10 +73,11 @@ def get_club_member_cl_games(member_tag: str, member_name: str, season_id: int, 
 
     club_league_games = []
     try:
-        response_club_member_games = do_retryable_request(request_type = RequestType.GET,
+        response = do_retryable_request(request_type = RequestType.GET,
                                                 request_contents = request_contents,
-                                                retry_options = request_retry_opts).json()["items"]
-        if response_club_member_games:
+                                                retry_options = request_retry_opts)
+        if response:
+            response_club_member_games = response.json()["items"]
             for game in response_club_member_games:
                 if 'battleTime' in game:
                     res_game_date = str(game['battleTime'])
