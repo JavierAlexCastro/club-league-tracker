@@ -79,7 +79,7 @@ def get_latest_club_league_season() -> ClubLeagueSeason:
 def is_cl_game_already_stored(timestamp: str) -> bool:
     is_duplicate = False
     stored_game = db_session.query(ClubLeagueGame) \
-        .filter(ClubLeagueGame.game_date.is_(timestamp)) \
+        .filter(ClubLeagueGame.game_date == timestamp) \
         .first()
     if stored_game is not None:
         print(f"Warning! Club league game with timestam {timestamp} is already stored")
