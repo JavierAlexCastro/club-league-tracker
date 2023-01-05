@@ -74,28 +74,29 @@ def get_club_member_cl_games(member_tag: str, member_name: str, season_id: int, 
         response_club_member_games = do_retryable_request(request_type = RequestType.GET,
                                                 request_contents = request_contents,
                                                 retry_options = request_retry_opts).json()["items"]
-        if 'battleTime' in response_club_member_games:
-            res_game_date = str(response_club_member_games['battleTime'])
-        if 'event' in response_club_member_games:
-            res_event = response_club_member_games['event']
-            if 'mode' in res_event:
-                res_game_mode = str(res_event['mode'])
-            if 'map' in res_event:
-                res_game_map = str(res_event['map'])
-        if 'battle' in response_club_member_games:
-            res_battle = response_club_member_games['battle']
-            if 'type' in res_battle:
-                res_type = str(res_battle['type'])
-            if 'result' in res_battle:
-                res_game_result = str(res_battle['result'])
-            if 'trophyChange' in res_battle:
-                res_game_trophies = res_battle['trophyChange']
+        for game in response_club_member_games:
+            if 'battleTime' in game:
+                res_game_date = str(game['battleTime'])
+            if 'event' in game:
+                res_event = game['event']
+                if 'mode' in res_event:
+                    res_game_mode = str(res_event['mode'])
+                if 'map' in res_event:
+                    res_game_map = str(res_event['map'])
+            if 'battle' in game:
+                res_battle = game['battle']
+                if 'type' in res_battle:
+                    res_type = str(res_battle['type'])
+                if 'result' in res_battle:
+                    res_game_result = str(res_battle['result'])
+                if 'trophyChange' in res_battle:
+                    res_game_trophies = res_battle['trophyChange']
 
-        # This determines if it is a club league game compared to just a regular game
-        if res_type in cl_game_type and res_game_trophies in cl_trophy_change:
-            club_league_games.append(ClubLeagueGame(season_id = season_id, game_day = None, game_date = res_game_date,
-                        game_mode = res_game_mode, game_map = res_game_map, game_result = res_game_result,
-                        game_trophies = res_game_trophies, member_tag = member_tag, member_name = member_name))
+            # This determines if it is a club league game compared to just a regular game
+            if res_type in cl_game_type and res_game_trophies in cl_trophy_change:
+                club_league_games.append(ClubLeagueGame(season_id = season_id, game_day = None, game_date = res_game_date,
+                            game_mode = res_game_mode, game_map = res_game_map, game_result = res_game_result,
+                            game_trophies = res_game_trophies, member_tag = member_tag, member_name = member_name))
     except Exception as ex:
         # TODO: proper logging
         raise RuntimeError(f"Error getting battle log for member {member_tag}") from ex
