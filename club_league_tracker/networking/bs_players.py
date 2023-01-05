@@ -94,7 +94,7 @@ def get_club_member_cl_games(member_tag: str, member_name: str, season_id: int, 
 
             # This determines if it is a club league game compared to just a regular game
             if res_type in cl_game_type and res_game_trophies in cl_trophy_change:
-                club_league_games.append(ClubLeagueGame(season_id = season_id, game_day = None, game_date = res_game_date,
+                club_league_games.append(ClubLeagueGame(season_id = season_id, game_season_day = None, game_date = res_game_date,
                             game_mode = res_game_mode, game_map = res_game_map, game_result = res_game_result,
                             game_trophies = res_game_trophies, member_tag = member_tag, member_name = member_name))
     except Exception as ex:
