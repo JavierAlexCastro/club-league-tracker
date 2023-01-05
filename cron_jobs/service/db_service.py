@@ -124,10 +124,13 @@ def upsert_club_members(club_members: typing.List[ClubMember], auth_token: str):
         raise RuntimeError(f"Failed to commit club_members to DB. Insertions {insertions}, Updates {updates}, Deletions {deletions}") from ex
 
 def add_club_league_games(cl_games: typing.List[ClubLeagueGame]):
+    counter = 0
     try:
         for game in cl_games:
             db_session.add(game)
+            counter+=1
         db_session.commit()
+        print(f"Added {counter} club league games successfully to DB")
     except Exception as ex:
         raise RuntimeError(f"Failed to add {len(cl_games)} club league games for {cl_games[0].member_tag} to DB.") from ex
 
