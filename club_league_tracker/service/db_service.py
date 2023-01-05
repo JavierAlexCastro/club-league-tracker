@@ -82,7 +82,7 @@ def is_cl_game_already_stored(timestamp: str) -> bool:
         .filter(ClubLeagueGame.game_date == timestamp) \
         .first()
     if stored_game is not None:
-        print(f"Warning! Club league game with timestam {timestamp} is already stored")
+        print(f"Warning! Club league game with timestamp {timestamp} is already stored")
         is_duplicate = True
 
     return is_duplicate

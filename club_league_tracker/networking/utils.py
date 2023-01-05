@@ -64,7 +64,7 @@ def do_retryable_request(request_type: RequestType,
         print(f"Request response: {query_response}")
 
     if not query_response:
-        if query_response.status_code is 404:
+        if query_response.status_code == 404:
             print(f"Warning! Got 404 sending {request_type} to {request_contents.url}. Message: {query_response.text}")
         else:
             raise RuntimeError(f"Max retries exceeded sending {request_type} to {request_contents.url}. Got {query_response.text}")
