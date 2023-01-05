@@ -4,6 +4,7 @@ from club_league_tracker.db import db_session
 from club_league_tracker.models.db import ClubMember
 from club_league_tracker.models.db import ClubMemberDetails
 from club_league_tracker.models.db import ClubLeagueSeason
+from club_league_tracker.models.db import ClubLeagueGame
 from club_league_tracker.models.enums.club_roles import ClubRoles
 
 def save_club_members(club_members: typing.List[ClubMember]):
@@ -74,3 +75,15 @@ def get_latest_club_league_season() -> ClubLeagueSeason:
     except Exception as ex:
         raise RuntimeError(f"Failed to get latest club_league_season from DB") from ex
     return cl_season
+
+def is_cl_game_already_stored(timestamp: str) -> bool:
+    is_duplicate = False
+    stored_game = db_session.query(ClubLeagueGame) \
+        .filter(ClubLeagueGame.game_date.is_(timestamp)) \
+        .first()
+    if stored_game is not None:
+        print(f"Warning! Club league game with timestam {timestamp} is already stored")
+        is_duplicate = True
+
+    return is_duplicate
+    

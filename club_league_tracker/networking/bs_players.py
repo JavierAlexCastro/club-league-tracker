@@ -6,6 +6,7 @@ from club_league_tracker.models.db.club_league_game import ClubLeagueGame
 from club_league_tracker.models.enums.defaults import Defaults
 from club_league_tracker.networking.utils import RequestContents, RetryOptions, RequestType
 from club_league_tracker.networking.utils import do_retryable_request
+from club_league_tracker.service.db_service import is_cl_game_already_stored
 
 cl_excluded_game_mode = ["soloShowdown", "duoShowdown"]
 cl_game_type = ["teamRanked", "ranked"]
@@ -93,8 +94,11 @@ def get_club_member_cl_games(member_tag: str, member_name: str, season_id: int, 
                 if 'trophyChange' in res_battle:
                     res_game_trophies = res_battle['trophyChange']
 
+            # now_time = datetime.now()
+            # game_time = datetime.strptime(res_game_date, "%Y%m%dT%H%M%S.%fZ")
+            is_duplicate = is_cl_game_already_stored(res_game_date)
             # This determines if it is a club league game compared to just a regular game
-            if res_type in cl_game_type and res_game_trophies in cl_trophy_change and res_game_mode not in cl_excluded_game_mode:
+            if res_type in cl_game_type and res_game_trophies in cl_trophy_change and res_game_mode not in cl_excluded_game_mode and not is_duplicate:
                 club_league_games.append(ClubLeagueGame(season_id = season_id, game_season_day = None, game_date = res_game_date,
                             game_mode = res_game_mode, game_map = res_game_map, game_result = res_game_result,
                             game_trophies = res_game_trophies, member_tag = member_tag, member_name = member_name))
