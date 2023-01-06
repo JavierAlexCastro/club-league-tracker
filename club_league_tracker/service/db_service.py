@@ -95,7 +95,7 @@ def get_club_league_games_for_season(season_id: int, member_tag: str) -> typing.
         games = db_session.query(ClubLeagueGame) \
             .filter(ClubLeagueGame.season_id == season_id, ClubLeagueGame.member_tag == member_tag) \
             .all()
-        if games is None or len(games) == 0:
+        if games is None:
             raise RuntimeError(f"Could not find club league season {season_id} games for member {member_tag}")
         print(f"Got club league games for season {season_id} and member {member_tag} from DB")
     except Exception as ex:
