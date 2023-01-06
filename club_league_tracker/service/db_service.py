@@ -86,4 +86,17 @@ def is_cl_game_already_stored(timestamp: str) -> bool:
         is_duplicate = True
 
     return is_duplicate
-    
+
+def get_club_league_games_for_season(season_id: int, member_tag: str) -> typing.List[ClubLeagueGame]:
+    games = []
+    print(f"Fetching club league season {season_id} games for member {member_tag} from DB")
+    try:
+        games = db_session.query(ClubLeagueGame) \
+            .filter(ClubLeagueGame.season_id == season_id, ClubLeagueGame.member_tag == member_tag) \
+            .all()
+        if games is None or len(games) == 0:
+            raise RuntimeError(f"Could not find club league season {season_id} games for member {member_tag}")
+        print(f"Got club league games for season {season_id} and member {member_tag} from DB")
+    except Exception as ex:
+        raise RuntimeError(f"Failed to get club league season {season_id} games for member {member_tag} from DB") from ex
+    return games

@@ -131,7 +131,19 @@ def show_member_details():
         # TODO: proper logging and exception handling
         raise RuntimeError("Error getting club member details") from ex
 
-    return render_template('member.html', member = member, member_details = member_details)
+    current_season = None
+    season_games = []
+    try:
+        if member is not None:
+            # TODO: proper logging
+            print(f"Getting club league games for the current season for {member.tag}")
+            current_season = db_service.get_latest_club_league_season()
+            if current_season is not None:
+                season_games = db_service.get_club_league_games_for_season(current_season.id, tag)
+    except Exception as ex:
+        raise RuntimeError(f"Error getting season's club leage games for member {tag}")
+
+    return render_template('member.html', member = member, member_details = member_details, cl_season_games = season_games, season = current_season)
 
 @app.teardown_appcontext
 def shutdown_session(exception=None):

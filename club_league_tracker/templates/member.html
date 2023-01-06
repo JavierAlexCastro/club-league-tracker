@@ -16,9 +16,41 @@
             <li>Solo Victories: {{ member_details.victories_solo }}</li>
         </ul>
         <br><hr>
+        <br>Club League Games<br>
+        <p>These are current season's club league games for {{ member.name }}:</p>
         <br><br>
-        <p>Club league game data coming soon ...</p>
+        <table cellspacing="3" cellpadding="5" bgcolor="#000000">
+            <thead>
+                <tr bgcolor="#ffffff">
+                    <th>Season ID</th>
+                    <th>Season Code</th>
+                    <th>Game Date</th>
+                    <th>Game Mode</th>
+                    <th>Game Map</th>
+                    <th>Result</th>
+                    <th>Trophies</th>
+                    <th>Member Tag</th>
+                    <th>Member Name</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for game in cl_season_games %}
+                <tr bgcolor="#ffffff">
+                    <td>{{ season.id }}</td>
+                    <td>{{ season.week }}</td>
+                    <td>{{ game.game_date }}</td>
+                    <td>{{ game.game_mode }}</td>
+                    <td>{{ game.game_map }}</td>
+                    <td>{{ game.game_result }}</td>
+                    <td>{{ game.game_trophies }}</td>
+                    <td>{{ game.member_tag }}</td>
+                    <td>{{ game.member_name }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
         <br><br>
+        <!-- TODO: button to see prevous seasons -->
         <hr><br>
     <footer>
         <nav>
