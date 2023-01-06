@@ -67,8 +67,9 @@ def get_latest_club_league_season() -> ClubLeagueSeason:
     cl_season = None
     print("Fetching latest club league season from DB")
     try:
-        cl_season = ClubLeagueSeason.query \
-            .filter(ClubLeagueSeason.is_current.is_(True))
+        cl_season = db_session.query(ClubLeagueSeason) \
+            .filter(ClubLeagueSeason.is_current.is_(True)) \
+            .first()
         if cl_season is None:
             raise RuntimeError("Could not find latest club_leage_season")
         print(f"Got latest club league season from DB")
