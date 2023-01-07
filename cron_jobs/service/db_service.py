@@ -12,44 +12,56 @@ from club_league_tracker.service.db_service import get_club_member_details as db
 
 def fetch_current_cl_season() -> ClubLeagueSeason:
     current_season = None
+    session = db_session()
     try:
         print("Fetching current club league season")
-        current_season = db_session.query(ClubLeagueSeason) \
+        current_season = session.query(ClubLeagueSeason) \
             .filter(ClubLeagueSeason.is_current.is_(True)) \
             .first()
     except Exception as ex:
         raise RuntimeError("Failed to fetch current club league season from DB") from ex
-    
+    finally:
+        session.close()
+
     return current_season
 
 def save_club_league_season(season: ClubLeagueSeason):
+    session = db_session()
     try:
-        db_session.add(season)
-        db_session.commit()
+        session.add(season)
+        session.commit()
         print(f"Successfully added club league season {season.week} to DB")
     except Exception as ex:
         raise RuntimeError(f"Failed to commit club_league_season {season.week} to DB") from ex
+    finally:
+        session.close()
 
 def deprecate_club_league_season(season: ClubLeagueSeason):
+    session = db_session()
     try:
         print(f"Deprecating season {season.week}")
         # setattr(season, 'season_is_current', False)
         season.is_current = False
-        db_session.add(season)
-        db_session.commit()
+        session.add(season)
+        session.commit()
         print(f"Deprecated season {season.week}")
     except Exception as ex:
         raise RuntimeError(f"Failed to update club league season {season.week} on DB") from ex
+    finally:
+        session.close()
 
 def save_club_members(club_members: typing.List[ClubMember]):
+    session = db_session()
     try:
         for member in club_members:
-            db_session.add(member)
-        db_session.commit()
+            session.add(member)
+        session.commit()
         # TODO: proper logging
         print(f"Successfully commited {len(club_members)} records to DB")
     except Exception as ex:
         raise RuntimeError("Failed to commit club_members to DB") from ex
+    finally:
+        session.close()
 
 # TODO: remove side effect of updating no_longer_members into its own function
 # TODO: refactor so db_service only does db operations and not other logic
@@ -81,40 +93,41 @@ def upsert_club_members(club_members: typing.List[ClubMember], auth_token: str):
     print(f"New members: {len(new_members)}")
     print(f"Continuing members: {len(continuing_members)}")
 
+    session = db_session()
     try:
         for member in new_members:
-            db_session.add(member)
+            session.add(member)
 
             member_details = api_service.get_member_details_from_api(member.tag, auth_token)
             member_details.start_date = func.now()
-            db_session.add(member_details)
+            session.add(member_details)
 
             insertions+=1
 
         for member in continuing_members:
-            member.update(db_session, member.tag, member.club_tag, member.name, member.role, member.trophies)
+            member.update(session, member.tag, member.club_tag, member.name, member.role, member.trophies)
 
             member_details = api_service.get_member_details_from_api(member.tag, auth_token)
             db_member_details = db_get_club_member_details(member.tag)
             if db_member_details is None: # probably because was added before member_details were a thing
-                db_session.add(member_details)
+                session.add(member_details)
             else:
-                member_details.update(db_session, member.tag, db_member_details.start_date, None, member_details.victories_trios, 
+                member_details.update(session, member.tag, db_member_details.start_date, None, member_details.victories_trios, 
                                     member_details.victories_duos, member_details.victories_solo)
             updates+=1
 
         for member in no_longer_members:
-            member.update(db_session, member.tag, member.club_tag, member.name, ClubRoles.NOT_MEMBER.value, member.trophies)
+            member.update(session, member.tag, member.club_tag, member.name, ClubRoles.NOT_MEMBER.value, member.trophies)
 
             member_details = api_service.get_member_details_from_api(member.tag, auth_token)
             db_member_details = db_get_club_member_details(member.tag)
             if db_member_details is None: # probably because was added before member_details were a thing
-                db_session.add(member_details)
+                session.add(member_details)
             else:
-                member_details.update(db_session, member.tag, db_member_details.start_date, func.now(), member_details.victories_trios, 
+                member_details.update(session, member.tag, db_member_details.start_date, func.now(), member_details.victories_trios, 
                                         member_details.victories_duos, member_details.victories_solo)
             deletions+=1
-        db_session.commit()
+        session.commit()
          # TODO: proper logging
         print(f"Successfully commited members to DB")
         print(f"commited: {len(new_members)} additions")
@@ -122,17 +135,22 @@ def upsert_club_members(club_members: typing.List[ClubMember], auth_token: str):
         print(f"commited: {len(no_longer_members)} de-activations")
     except Exception as ex:
         raise RuntimeError(f"Failed to commit club_members to DB. Insertions {insertions}, Updates {updates}, Deletions {deletions}") from ex
+    finally:
+        session.close()
 
 def add_club_league_games(cl_games: typing.List[ClubLeagueGame]):
     counter = 0
+    session = db_session()
     try:
         for game in cl_games:
-            db_session.add(game)
+            session.add(game)
             counter+=1
-        db_session.commit()
+        session.commit()
         print(f"Added {counter} club league games successfully to DB")
     except Exception as ex:
         raise RuntimeError(f"Failed to add {len(cl_games)} club league games for {cl_games[0].member_tag} to DB.") from ex
+    finally:
+        session.close()
 
 
 def get_club_members(club_tag: str) -> typing.List[ClubMember]:

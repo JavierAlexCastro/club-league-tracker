@@ -22,7 +22,7 @@ def create_db_engine():
         f"{config_prefix}pool_pre_ping": True,
         f"{config_prefix}pool_size": 10,
         f"{config_prefix}max_overflow": 2,
-        f"{config_prefix}pool_recycle": 300,
+        f"{config_prefix}pool_recycle": 3600,
         f"{config_prefix}pool_use_lifo": True
     }
 

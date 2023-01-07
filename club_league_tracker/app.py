@@ -45,7 +45,7 @@ def load_db_config(flask_app):
         "pool_pre_ping": True,
         "pool_size": 10,
         "max_overflow": 2,
-        "pool_recycle": 300,
+        "pool_recycle": 3600,
         "pool_use_lifo": True
     }
 

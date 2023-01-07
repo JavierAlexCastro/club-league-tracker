@@ -8,14 +8,17 @@ from club_league_tracker.models.db import ClubLeagueGame
 from club_league_tracker.models.enums.club_roles import ClubRoles
 
 def save_club_members(club_members: typing.List[ClubMember]):
+    session = db_session()
     try:
         for member in club_members:
-            db_session.add(member)
-        db_session.commit()
+            session.add(member)
+        session.commit()
         # TODO: proper logging
         print(f"Successfully commited {len(club_members)} records to DB")
     except Exception as ex:
         raise RuntimeError("Failed to commit club_members to DB") from ex
+    finally:
+        session.close()
 
 #TODO: this method should not sort. Instead a sort__service should exist with sorting methods as needed
 def get_club_members(club_tag: str) -> typing.List[ClubMember]:
@@ -66,8 +69,9 @@ def get_club_league_season(season_id: str) -> ClubLeagueSeason:
 def get_latest_club_league_season() -> ClubLeagueSeason:
     cl_season = None
     print("Fetching latest club league season from DB")
+    session = db_session()
     try:
-        cl_season = db_session.query(ClubLeagueSeason) \
+        cl_season = session.query(ClubLeagueSeason) \
             .filter(ClubLeagueSeason.is_current.is_(True)) \
             .first()
         if cl_season is None:
@@ -75,24 +79,34 @@ def get_latest_club_league_season() -> ClubLeagueSeason:
         print(f"Got latest club league season from DB")
     except Exception as ex:
         raise RuntimeError(f"Failed to get latest club_league_season from DB") from ex
+    finally:
+        session.close()
+
     return cl_season
 
 def is_cl_game_already_stored(timestamp: str) -> bool:
     is_duplicate = False
-    stored_game = db_session.query(ClubLeagueGame) \
-        .filter(ClubLeagueGame.game_date == timestamp) \
-        .first()
-    if stored_game is not None:
-        print(f"Warning! Club league game with timestamp {timestamp} is already stored")
-        is_duplicate = True
+    session = db_session()
+    try:
+        stored_game = session.query(ClubLeagueGame) \
+            .filter(ClubLeagueGame.game_date == timestamp) \
+            .first()
+        if stored_game is not None:
+            print(f"Warning! Club league game with timestamp {timestamp} is already stored")
+            is_duplicate = True
+    except Exception as ex:
+        raise RuntimeError("Error verifying if club league is already stored") from ex
+    finally:
+        session.close()
 
     return is_duplicate
 
 def get_club_league_games_for_season(season_id: int, member_tag: str) -> typing.List[ClubLeagueGame]:
     games = []
     print(f"Fetching club league season {season_id} games for member {member_tag} from DB")
+    session = db_session()
     try:
-        games = db_session.query(ClubLeagueGame) \
+        games = session.query(ClubLeagueGame) \
             .filter(ClubLeagueGame.season_id == season_id, ClubLeagueGame.member_tag == member_tag) \
             .all()
         if games is None:
@@ -100,4 +114,7 @@ def get_club_league_games_for_season(season_id: int, member_tag: str) -> typing.
         print(f"Got club league games for season {season_id} and member {member_tag} from DB")
     except Exception as ex:
         raise RuntimeError(f"Failed to get club league season {season_id} games for member {member_tag} from DB") from ex
+    finally:
+        session.close()
+
     return games
