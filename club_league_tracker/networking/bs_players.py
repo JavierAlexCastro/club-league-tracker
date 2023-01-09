@@ -8,7 +8,7 @@ from club_league_tracker.networking.utils import RequestContents, RetryOptions, 
 from club_league_tracker.networking.utils import do_retryable_request
 from club_league_tracker.service.db_service import is_cl_game_already_stored
 
-cl_excluded_game_mode = ["soloShowdown", "duoShowdown"]
+cl_excluded_game_mode = ["soloShowdown", "duoShowdown", "bossFight"]
 cl_game_type = ["teamRanked", "ranked"]
 cl_trophy_change = [3, 5, 7, 9]
 
